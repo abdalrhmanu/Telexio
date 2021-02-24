@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Head: DON'T DELETE -->
+<% include partials/head %>
+
+<body class="body-meeting-room">
+
+
+    <p id="remote-video-text"></p>
+    <video id="remote-video" autoplay playsinline></video>
+    <div id="moveable" >
+      <p id="local-video-text">No webcam input</p>
+      <video id="local-video" autoplay muted playsinline></video>
+    </div>
+
+
+    <!-- Hide w/ css -->
+      <div id="entire-chat">
+        <div id="chat-zone">
+          <div class="chat-messages"></div>
+        </div>
+        <form class="compose">
+          <input type="text" placeholder="Type a message" />
+        </form>
+      </div>
+
+
+
+    <script src="/javascripts/meeting-room.js"></script>
+
+
+</body>
+</html>
