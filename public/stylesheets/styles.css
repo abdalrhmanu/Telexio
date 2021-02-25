@@ -6,11 +6,7 @@ html {
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
   }
-  
-  .body {
-    margin: 0;
-  }
-  
+
   article,
   aside,
   footer,
@@ -25,6 +21,7 @@ html {
 }
 
 .body {
+  margin: 0;
   color: #fff;
   font-family: 'Open Sans', sans-serif;
   background: #16171b;
@@ -98,6 +95,14 @@ button:hover {
   /* grid-gap: 0.2rem; */
   /* width: 40px; */
   width: 70px;
+}
+
+button:focus {
+  outline: none;
+}
+
+button:hover {
+  color: white;
 }
 
 .HoverState {
@@ -188,8 +193,10 @@ button:hover {
 
 /* End Video Controller buttons */
 
-/* Meeting Room Page */
 
+
+
+/* Meeting Room Page */
 
 .body-meeting-room {
   background: #16171b;
@@ -275,72 +282,9 @@ video {
   background-position: center center;
 }
 
-#remote-video.fullscreen {
+/* #remote-video.fullscreen {
   width: 100%;
-}
-
-/*Buttons*/
-.multi-button button {
-  border: none;
-  font-size: 1.5rem;
-  transition: all 0.3s ease-in-out;
-  color: gray;
-  background: transparent;
-  cursor: pointer;
-  padding: 7px;
-  border-radius: 5px;
-}
-
-button:focus {
-  outline: none;
-}
-
-button:hover {
-  color: white;
-}
-
-.multi-button {
-  position: absolute;
-  left: calc(7.5vw - 40px);
-  top: 50%;
-  -ms-transform: translate(0%, -50%);
-  transform: translate(0%, -50%);
-  z-index: 999;
-  border-radius: 10px;
-  background: #16171a;
-  box-shadow: 9px 9px 16px #0a0b0c, -9px -9px 16px #222328;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  /* grid-gap: 0.2rem; */
-  width: 40px;
-}
-
-.HoverState {
-  color: white;
-  font-family: "Heebo", sans-serif;
-  font-size: 0.8rem;
-  position: absolute;
-  left: 60px;
-  white-space: nowrap;
-  top: 0px;
-  font-weight: bold;
-  background: #16171a;
-  padding: 10px;
-  border-radius: 10px;
-}
-
-.buttonContainer {
-  position: relative;
-  margin: 0 auto;
-}
-
-/*.fa-phone-slash {*/
-/*  color: #470000;*/
-/*}*/
-
-/*End buttons*/
+} */
 
 /*Text chat*/
 #entire-chat {
@@ -523,9 +467,78 @@ button:hover {
 }
 
 
+/* Onboarding */
+.body-container{
+  background: #16171b;
+  margin: 0;
+  padding: 0;
+  opacity: 1; /* make things invisible upon start */
+  overflow: hidden;
+}
+
+#onboarding-video{
+  padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 35%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: auto;
+    max-height: 100%;
+    max-width: 100%;
+    border-radius: 10px;
+    background-image: url(../images/loader.gif);
+    background-size: 400px auto;
+    background-repeat: no-repeat;
+    background-position: center center;
+    box-shadow: 0rem 0rem 6rem rgba(255,255,255,0.475);
+}
+
+.onboarding-options-text{
+  position: absolute;
+  right: 14%;
+  bottom: 55%;
+  font-size: 2em;
+}
 
 
+.onboarding-button-container{
+  text-align: center;
+  position: relative;
+  top: 50vh;
+  left: 31vw;
+}
 
+.onboarding-button-container a{
+  background: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 20px 30px;
+  text-decoration: none;
+  outline: none;
+  color: #000;
+  box-shadow: 0 1rem 3rem rgba(255,255,255,0.175)!important;
+  cursor: pointer;
+}
+
+
+@media (max-width: 640px) {
+  
+  #onboarding-video{
+    height: calc((16/9) * 75vw);
+    width: 75vw;
+    left: 50%;
+  }
+
+  
+  .onboarding-button-container{
+    top: 90vh;
+    left: unset;
+  }
+
+}
 
 
 

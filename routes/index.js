@@ -35,6 +35,11 @@ router.get('/meeting-room', function(req, res, next) {
   });
 });
 
+router.get('/meeting-onboarding', function(req, res, next) {
+  res.render('meeting-onboarding', {
+    url: lib.url,
+  });
+});
 
 
 module.exports = router;
