@@ -46,22 +46,26 @@
                                 </div>
                                 <div class="col-6">
                                     <span>
-                                        <input type="text" name="" id="input-01">
+                                        <!-- Will be the in the url for linking users to same room -->
+                                        <input type="text" name="" id="input-01" required>
                                     </span>
                                 </div>
                                 
                             </div>
                             <div class="row call-name-logan-subcol">
-                                <div class="col-6">
-                                    <span>Meeting Room Password</span>
+                                <div class="col-6"> 
+                                    <span>Your Name</span>
                                 </div>
 
                                 <div class="col-6">
                                     <span>
-                                        <input type="password" name="" id="">
+                                        <input type="text" name="" id="user-name" required>
                                     </span>
                                 </div>
                                
+                            </div>
+                            <div class="row start-now-button" id="start-call-button">
+                                <a>Start Now</a>
                             </div>
                             
                         </div>
@@ -85,5 +89,19 @@
     </body>
 
     <script src="javascripts/room-name-picker.js"></script>
+    <script>
+        document.getElementById('start-call-button').addEventListener('click', ()=>{
+
+            var name = document.getElementById('user-name').value;
+            var roomID = document.getElementById('input-01').value;
+            
+            if(roomID.length != 0 && name.length != 0 ){
+                window.location.replace("/meeting-room?id="+roomID+"&name="+name);
+            }else{
+                alert('Both inputs must be filled before before joining the call');
+            }            
+
+        })
+    </script>
 
 </html>

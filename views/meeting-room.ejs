@@ -9,30 +9,51 @@
 
 
 
-    <p id="remote-video-text"></p>
-    <video id="remote-video" autoplay playsinline></video>
-    <div id="moveable" >
-      <p id="local-video-text">No webcam input</p>
-      <video id="local-video" autoplay muted playsinline></video>
-    </div>
+  <div id="header">
+    <a target="_blank" href="/">
+      <img src="/images/logo.svg" alt="Neon" width="48" height="48" />
+      <p>Zipcall</p>
+    </a>
+  </div>
 
+  <p id="remote-video-text"></p>
+  <video id="remote-video" autoplay playsinline></video>
+  <div id="moveable">
+    <p id="local-video-text">No webcam input</p>
+    <video id="local-video" autoplay muted playsinline></video>
+  </div>
 
+  <div id="entire-chat">
+    <div id="chat-zone">
+      <div class="chat-messages" id="chat-messages-box">
+        <!-- msg1 example -->
+        <!-- <div class="message-item customer cssanimation fadeInBottom">
+          <div class="message-bloc">
+            <div class="message">
+              self msg
+            </div>
+          </div>
+        </div> -->
 
+        <!-- msg2 example -->
+        <!-- <div class="message-item moderator cssanimation fadeInBottom">
+          <div class="message-bloc">
+            <div class="message">
+              user msg
+            </div>
+          </div>
+        </div> -->
 
-    <!-- Hide w/ css -->
-      <div id="entire-chat">
-        <div id="chat-zone">
-          <div class="chat-messages"></div>
-        </div>
-        <form class="compose">
-          <input type="text" placeholder="Type a message" />
-        </form>
       </div>
+    </div>
+    <form class="compose" id="chat-form" autocomplete="off">
+      <input type="text" placeholder="Type a message" id="msg" required/>
+    </form>
+  </div>
 
 
-
-    <script src="/javascripts/meeting-room.js"></script>
-
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/javascripts/meeting-room.js"></script>
 
 </body>
 </html>

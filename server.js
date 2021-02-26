@@ -1,28 +1,36 @@
-var express = require('express');
-var app = express();
-var http = require("http").createServer(app);
+const express = require('express');
+const app = express();
+const http = require("http");
+const server = http.createServer(app);
+
+const logger = require('morgan');
+const path = require('path');
 const createError = require('http-errors');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var path = require('path');
-
-var io = require("socket.io")(http);
-
+const cookieParser = require('cookie-parser');
 const minifyHTML = require('express-minify-html');
 const lib = require('./config/library');
+const formatMessage = require('./utils/messages');
+const {
+    userJoin,
+    getCurrentUser, 
+    userLeave, 
+    getRoomUsers
+} = require('./utils/users');
+
+
+const socketio = require("socket.io");
+const { Socket } = require('dgram');
+const io = socketio(server);
 
 // var indexRouter = require('./routes/index');
-
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-
 app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, 'public')));
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -44,6 +52,7 @@ app.use(minifyHTML({
     minifyCSS: true
   }
 }));
+
 
 /* GET home page. */
 app.get('/', function(req, res, next) {
@@ -71,9 +80,65 @@ app.get('/meeting-onboarding', function(req, res, next) {
 });
 
 
+const admin = 'Admin';
+// Runs when client connects
+io.on('connection', socket =>{
+
+    socket.on('joinRoom', ({username, roomID})=>{
+        const user = userJoin(socket.id, username, roomID);
+        // console.log(user)
+
+        socket.join(user.roomID);
+
+        // Welcome - Emitting msgs from server to client
+        socket.emit('message', formatMessage(admin, 'Thank you for using ${}, please wait for other participants to join.'));
+
+        // Broadcast when user connects
+        /**
+         * Broadcasting to single client
+         * socket.emit()
+         * 
+         * Broadcasting to all clients except yourself
+         * socket.broadcast.emit()
+         * 
+         * Broadcasting to all the clients in the room
+         * io.emit()
+         */
+        socket.broadcast.to(user.roomID).emit('message', formatMessage(admin, `${user.username} has joined the call`));
+
+        // Sending participants information
+        io.to(user.roomID).emit('participants', {
+            roomID: user.roomID,
+            users: getRoomUsers(user.roomID) 
+        });
+
+    })
+
+    // Listen for chatMessage event
+    socket.on('chatMessage', (msg)=>{
+        // Emit back to the client 'everybody'
+        const user = getCurrentUser(socket.id);
+
+        io.to(user.roomID).emit('message', formatMessage(user.username,msg));
+    });
+
+    // Broadcast when a user disconnects
+    socket.on('disconnect', ()=>{
+        const user = userLeave(socket.id);
+
+        if(user){
+            io.to(user.roomID).emit('message', formatMessage(admin, `${user.username} has left the call`));
+
+            // Sending participants information
+            io.to(user.roomID).emit('participants', {
+                roomID: user.roomID,
+                users: getRoomUsers(user.roomID) 
+            });
+        }
+    });
+})
+
 // Routes End
-
-
 
 
 // catch 404 and forward to error handler
@@ -95,6 +160,6 @@ app.use(function(err, req, res, next) {
 
 
 var port = process.env.PORT || 3000;
-http.listen(port, function () {
+server.listen(port, function () {
   console.log("http://localhost:" + port);
 });
