@@ -1,45 +1,47 @@
-var express = require('express');
-const minifyHTML = require('express-minify-html');
-const lib = require('../config/library');
+// TODO: Decouple all routes from server.js into here
 
-var router = express.Router();
+// var express = require('express');
+// const minifyHTML = require('express-minify-html');
+// const lib = require('../config/library');
 
-router.use(minifyHTML({
-  override: true,
-  exception_url: false,
-  htmlMinifier: {
-    removeComments: true,
-    removeAttributeQuotes: false,
-    collapseWhitespace: true,
-    minifyJS: true,
-    minifyCSS: true
-  }
-}));
+// var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', {
-    url: lib.url,
-  });
-});
+// router.use(minifyHTML({
+//   override: true,
+//   exception_url: false,
+//   htmlMinifier: {
+//     removeComments: true,
+//     removeAttributeQuotes: false,
+//     collapseWhitespace: true,
+//     minifyJS: true,
+//     minifyCSS: true
+//   }
+// }));
 
-router.get('/join-meeting', function(req, res, next) {
-  res.render('join-meeting', {
-    url: lib.url,
-  });
-});
+// /* GET home page. */
+// router.get('/', function(req, res, next) {
+//   res.render('index', {
+//     url: lib.url,
+//   });
+// });
 
-router.get('/meeting-room', function(req, res, next) {
-  res.render('meeting-room', {
-    url: lib.url,
-  });
-});
+// router.get('/join-meeting', function(req, res, next) {
+//   res.render('join-meeting', {
+//     url: lib.url,
+//   });
+// });
 
-router.get('/meeting-onboarding', function(req, res, next) {
-  res.render('meeting-onboarding', {
-    url: lib.url,
-  });
-});
+// router.get('/meeting-room', function(req, res, next) {
+//   res.render('meeting-room', {
+//     url: lib.url,
+//   });
+// });
+
+// router.get('/meeting-onboarding', function(req, res, next) {
+//   res.render('meeting-onboarding', {
+//     url: lib.url,
+//   });
+// });
 
 
-module.exports = router;
+// module.exports = router;
