@@ -84,7 +84,24 @@ function outputMessage(message){
 }
 
 
+// Toggle Chat function
+function toggleChat(){
 
+  let HoverStateText = document.getElementById('chat-text');
+  let chatContainer = document.getElementById('entire-chat');
+  let iconContainer = document.getElementById('toggle-chat-container');
+
+  if(chatContainer.style.display === 'none'){
+    chatContainer.style.display = 'block';
+    iconContainer.innerHTML = '<i id="chat-icon" class="fas fa-comment fa-xs" aria-hidden="true"></i>';
+    HoverStateText.innerText = 'Hide Chat';
+
+  }else{
+    chatContainer.style.display = 'none';
+    iconContainer.innerHTML = '<i id="chat-icon" class="fas fa-comment-slash fa-xs" aria-hidden="true"></i>';
+    HoverStateText.innerText = 'Show Chat';
+  }
+}
 
 // // Getting Local Stream
 // !(async function getMediaTransmission(){
