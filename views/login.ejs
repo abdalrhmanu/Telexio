@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+    <% include partials/head%>
+<body class="body">
+
+    
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js" defer></script>
+
+    <section class="container-fluid" style="height: 160px; margin-bottom: 25px;">
+        <div class="container">
+            <div class="row">
+                <header style="font-family: Fira Sans, sans-serif;font-weight: 600;font-size: 1rem;">
+                    <a target="_blank" href="/">
+                        <img src="/images/logo.svg" alt="Neon" width="48" height="48" />
+                    </a>
+                </header>
+            </div>
+        </div>
+    </section>
+
+
+
+    <section class="container-fluid">
+        <div class="container">
+            <div class="row">
+                <div class="col-8">
+                    <div class="row"><h1 style="font-size: 3em;">Sign up or Login here</h1></div>
+                    <div class="row"><h4 style="    margin-top: 0;
+                        font-weight: 800;
+                        color: rgb(87, 95, 101);
+                        text-align: left;
+                        font-size: 1rem;">Start your free trial now</h4></div>
+                    <div class="row">
+                        <div class="col-6" style="    border: 1px solid rgb(87, 95, 101);
+                        border-radius: 8px;
+                        padding: 30px;">
+                            <form id="login" method="POST" autocomplete="off">
+                                <div class="form-group" style="padding: 10px;">
+                                    <label>Email</label>
+                                    <input type="text" id="email" name="login" required="" title="Please enter you username" placeholder="example@gmail.com" style="    height: 40px;
+                                    border-radius: 4px;
+                                    width: 100%;
+                                    margin-top: 20px; padding: 8px;">
+                                </div>
+                                <div class="form-group" style="padding: 10px;">
+                                    <label for="password" >Password</label>
+                                    <input type="password" id="password" name="password" value="" required="" title="Please enter your password" style="    height: 40px;
+                                    border-radius: 4px;
+                                    width: 100%;
+                                    margin-top: 20px;padding: 8px;">
+                                </div>
+                                <div id="loginErrorMsg" style="display: none;">Wrong username og password</div>
+                                <div style="padding: 10px;">
+                                    <button type="submit" style="padding: 10px 20px; border-radius: 8px; color: #000;">Login</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4"></div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyA9sH1uJ0NrdyiiDpNV-NNDrdxoxvPYvU4",
+                authDomain: "meet-video-conferencing.firebaseapp.com",
+                projectId: "meet-video-conferencing",
+                storageBucket: "meet-video-conferencing.appspot.com",
+                messagingSenderId: "430024449554",
+                appId: "1:430024449554:web:c0bcf079f510876bbf02cb"
+            };
+            firebase.initializeApp(firebaseConfig);
+
+            firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+
+
+            document
+            .getElementById("login")
+            .addEventListener("submit", (event) => {
+              event.preventDefault();
+              const login = document.getElementById('email').value;
+              const password = document.getElementById('password').value;
+
+              firebase
+                .auth()
+                .signInWithEmailAndPassword(login, password)
+                .then(({ user }) => {
+                  return user.getIdToken().then((idToken) => {
+                    return fetch("/auth/api/sessionLogin", {
+                      method: "POST",
+                      headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                        "CSRF-Token": Cookies.get("XSRF-TOKEN"),
+                      },
+                      body: JSON.stringify({ idToken }),
+                    });
+                  });
+                })
+                .then(() => {
+                  return firebase.auth().signOut();
+                })
+                .then(() => {
+                  window.location.assign("/join-meeting");
+                }, (error) =>{
+                    Snackbar.show({
+                      text: error.message,
+                      width: "750px",
+                      pos: "top-center",
+                      actionTextColor: "#616161",
+                      duration: 500000,
+                      backgroundColor: "#16171a",
+                    });
+                });
+              return false;
+            });
+
+        });
+      </script>
+
+      <script src="javascripts/snackbar.js"></script>
+
+
+</body>
+</html>

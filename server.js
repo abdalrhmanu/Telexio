@@ -7,7 +7,18 @@ const logger = require('morgan');
 const path = require('path');
 const createError = require('http-errors');
 const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const csrf = require('csurf');
+const csrfMiddleware = csrf({cookie: true});
 const minifyHTML = require('express-minify-html');
+var minify = require('express-minify');
+var compression = require('compression')
+var uglifyEs = require('uglify-es');
+
+const admin = require("firebase-admin");
+const serviceAccount = require("./config/serviceAccountKey.json");
+
+
 const lib = require('./config/library');
 const formatMessage = require('./utils/messages');
 const {
@@ -28,6 +39,11 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(bodyParser.json())
+app.use(csrfMiddleware);
+
+app.use(compression());
+app.use(minify());
 
 app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, 'public')));
@@ -53,6 +69,58 @@ app.use(minifyHTML({
   }
 }));
 
+app.use(minify({
+  cache: false,
+  uglifyJsModule: null,
+  errorHandler: null,
+  jsMatch: /javascripts/, // '/javascript/?'
+  cssMatch: /css/,
+  jsonMatch: /json/,
+  sassMatch: /scss/,
+  lessMatch: /less/,
+  stylusMatch: /stylus/,
+  coffeeScriptMatch: /coffeescript/,
+}));
+
+app.use(minify({
+  uglifyJsModule: uglifyEs,
+}));
+
+// Auth
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://meet-video-conferencing-default-rtdb.firebaseio.com/'
+})
+
+app.all('*', (req, res, next)=>{
+  res.cookie("XSRF-TOKEN", req.csrfToken());
+  next();
+})
+
+app.post("/auth/api/sessionLogin", (req, res) => {
+  const idToken = req.body.idToken.toString();
+
+  const expiresIn = 60 * 60 * 24 * 5 * 1000;
+
+  admin
+    .auth()
+    .createSessionCookie(idToken, { expiresIn })
+    .then(
+      (sessionCookie) => {
+        const options = { maxAge: expiresIn, httpOnly: true };
+        res.cookie("session", sessionCookie, options);
+        res.end(JSON.stringify({ status: "success" }));
+      },
+      (error) => {
+        res.status(401).send("UNAUTHORIZED REQUEST!");
+      }
+  );
+});
+
+app.get("/logout", (req, res) => {
+  res.clearCookie("session");
+  res.redirect("/login");
+});
 
 /* GET home page. */
 app.get('/', function(req, res, next) {
@@ -62,14 +130,35 @@ app.get('/', function(req, res, next) {
 });
 
 app.get('/join-meeting', function(req, res, next) {
-  res.render('join-meeting', {
-    url: lib.url,
+  const sessionCookie = req.cookies.session || "";
+
+  admin
+  .auth()
+  .verifySessionCookie(sessionCookie, true /** checkRevoked */)
+  .then(() => {
+    res.render('join-meeting', {
+      url: lib.url,
+    });
+  })
+  .catch((error) => {
+    res.redirect("/login");
   });
 });
 
 app.get('/meeting-room', function(req, res, next) {
-  res.render('meeting-room', {
-    url: lib.url,
+
+  const sessionCookie = req.cookies.session || "";
+
+  admin
+  .auth()
+  .verifySessionCookie(sessionCookie, true /** checkRevoked */)
+  .then(() => {
+    res.render('meeting-room', {
+      url: lib.url,
+    });
+  })
+  .catch((error) => {
+    res.redirect("/login");
   });
 });
 
@@ -80,7 +169,28 @@ app.get('/meeting-onboarding', function(req, res, next) {
 });
 
 
-const admin = 'Admin';
+app.get('/login', function(req, res, next) {
+
+  const sessionCookie = req.cookies.session || "";
+
+  admin
+  .auth()
+  .verifySessionCookie(sessionCookie, true /** checkRevoked */)
+  .then(() => {
+    res.redirect('/join-meeting');
+  })
+  .catch((error) => {
+    res.render('login')
+  });
+
+  
+});
+
+app.get('/signup', function(req, res, next) {
+  res.redirect('/login')
+});
+
+const adminUser = 'Admin';
 // Runs when client connects
 io.on('connection', socket =>{
 
@@ -91,7 +201,7 @@ io.on('connection', socket =>{
         socket.join(user.roomID);
 
         // Welcome - Emitting msgs from server to client
-        socket.emit('message', formatMessage(admin, 'Thank you for using ${}, please wait for other participants to join.'));
+        socket.emit('message', formatMessage(adminUser, 'Thank you for using ${}, please wait for other participants to join.'));
 
         // Broadcast when user connects
         /**
@@ -104,7 +214,7 @@ io.on('connection', socket =>{
          * Broadcasting to all the clients in the room
          * io.emit()
          */
-        socket.broadcast.to(user.roomID).emit('message', formatMessage(admin, `${user.username} has joined the call`));
+        socket.broadcast.to(user.roomID).emit('message', formatMessage(adminUser, `${user.username} has joined the call`));
 
         // Sending participants information
         io.to(user.roomID).emit('participants', {
@@ -127,7 +237,7 @@ io.on('connection', socket =>{
         const user = userLeave(socket.id);
 
         if(user){
-            io.to(user.roomID).emit('message', formatMessage(admin, `${user.username} has left the call`));
+            io.to(user.roomID).emit('message', formatMessage(adminUser, `${user.username} has left the call`));
 
             // Sending participants information
             io.to(user.roomID).emit('participants', {
