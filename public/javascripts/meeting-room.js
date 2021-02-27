@@ -25,6 +25,22 @@ socket.on('message', message =>{
 
     // Scroll down - TODO: Test for a long chat and fix if needed
     chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+
+    // Show a Snackbar Toast
+    // Snackbar.show({
+    //   text: "Here is the join link for your call: " + url,
+    //   actionText: "Copy Link",
+    //   width: "750px",
+    //   pos: "top-center",
+    //   actionTextColor: "#616161",
+    //   duration: 500000,
+    //   backgroundColor: "#16171a",
+    //   onActionClick: function (element) {
+        
+    //     Snackbar.close();
+    //   },
+    // });
+
 })
 
 // Message submit
@@ -52,7 +68,7 @@ function outputMessage(message){
     /**
      * Message: message.text
      * Time: message.time
-     * User: message.user
+     * User: message.username
      * 
      * Ref: utils/messages
      */
@@ -73,7 +89,7 @@ function outputMessage(message){
         <div class="message-item moderator cssanimation fadeInBottom">
           <div class="message-bloc">
             <div class="message">
-              ${message.text}
+              ${message.username}: ${message.text}
             </div>
           </div>
         </div>
