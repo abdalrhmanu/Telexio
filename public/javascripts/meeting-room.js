@@ -4,9 +4,57 @@ let url = new URL(url_string);
 let roomID = url.searchParams.get("id");
 let username = url.searchParams.get("name");
 
-const socket = io();
+const socket = io('/');
 const chatForm = document.getElementById('chat-form');
 const chatMessagesDiv = document.getElementById('chat-messages-box');
+// const wsConnection = new WebSocket('ws://localhost:443');
+// let peerConn;
+
+
+let config = {
+  iceServers: [
+      {
+          "urls": ["stun:stun.l.google.com:19302", 
+          "stun:stun1.l.google.com:19302", 
+          "stun:stun2.l.google.com:19302"]
+      }
+  ]
+}
+
+
+// wsConnection.onopen = ()=>{
+//   console.log('Connected to signaling server');
+// }
+
+// var peer = new Peer({undefined,
+//   path: '/server/webrtc/peerjs',
+//   host: '/',
+//   port: '3000', //443 for heroku
+//   config: { 'iceServers': [
+//   { url: 'stun:stun01.sipphone.com' },
+//   { url: 'stun:stun.ekiga.net' },
+//   { url: 'stun:stunserver.org' },
+//   { url: 'stun:stun.softjoys.com' },
+//   { url: 'stun:stun.voiparound.com' },
+//   { url: 'stun:stun.voipbuster.com' },
+//   { url: 'stun:stun.voipstunt.com' },
+//   { url: 'stun:stun.voxgratia.org' },
+//   { url: 'stun:stun.xten.com' },
+//   {
+//     url: 'turn:192.158.29.39:3478?transport=udp',
+//     credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+//     username: '28224511:1379330808'
+//   },
+//   {
+//     url: 'turn:192.158.29.39:3478?transport=tcp',
+//     credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+//     username: '28224511:1379330808'
+//     }
+//   ]
+//   },
+
+//   debug: 3
+//   });
 
 let selfMsgFlag = false;
 
@@ -18,15 +66,20 @@ socket.emit('joinRoom', {username, roomID});
 //     // Function to display on DOM
 // })
 
+// peer.on('open', function(id) {
+//   console.log('My peer ID is: ' + id);
+// });
+
 // message is the event name sent from server, for sending messages
 socket.on('message', message =>{
-    console.log(message);
+    // console.log(message);
     outputMessage(message);
 
     // Scroll down - TODO: Test for a long chat and fix if needed
     chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
 
     // Show a Snackbar Toast
+    // Direct to onboarding page, where the user will add in the name, and meeting room id will be keyed in automatically from the shared url
     // Snackbar.show({
     //   text: "Here is the join link for your call: " + url,
     //   actionText: "Copy Link",
@@ -42,6 +95,39 @@ socket.on('message', message =>{
     // });
 
 })
+
+// socket.on('signalingServerMessage', event =>{
+//   handleSignalingData(JSON.parse(event.data));
+// });
+
+// function handleSignallingData(data) {
+//   switch (data.type) {
+//       case "answer":
+//           peerConn.setRemoteDescription(data.answer)
+//           break
+//       case "candidate":
+//           peerConn.addIceCandidate(data.candidate)
+//           break
+//       // case "offer":
+//       //     peerConn.setRemoteDescription(data.offer)
+//       //     createAndSendAnswer()
+//       //     break
+//       // case "candidate":
+//       //     peerConn.addIceCandidate(data.candidate)
+//   }
+// }
+
+// function createAndSendAnswer () {
+//   peerConn.createAnswer((answer) => {
+//       peerConn.setLocalDescription(answer)
+//       sendDataToServer({
+//           type: "send_answer",
+//           answer: answer
+//       })
+//   }, error => {
+//       console.log(error)
+//   })
+// }
 
 // Message submit
 chatForm.addEventListener('submit', (e)=>{
@@ -119,31 +205,89 @@ function toggleChat(){
   }
 }
 
-// // Getting Local Stream
-// !(async function getMediaTransmission(){
-//     "use strict";
+// Getting Local Stream
+!(async function getMediaTransmission(){
+    "use strict";
 
-//     let localStream;
-//     navigator.getUserMedia({
-//         video: {
-//             frameRate: 24,
-//             width: {
-//                 min: 480, ideal: 720, max: 1280
-//             },
-//             aspectRatio: 1.33333
-//         },
-//         audio: true
-//     }, (stream) => {
+    let localStream;
+    navigator.getUserMedia({
+        video: {
+            frameRate: 24,
+            width: {
+                min: 480, ideal: 720, max: 1280
+            },
+            aspectRatio: 1.33333
+        },
+        audio: true
+    }, (stream) => {
     
-//         // Starting video stream
-//         localStream = stream
-//         document.getElementById("local-video").srcObject = localStream
-//         document.getElementById('local-video-text').style.display = "none";
-//     }, (error) => {
-//         // Show Img as bg instead of dark bg
-//         console.log(error)
-//     })
-// })();
+        // Starting video stream
+        localStream = stream
+        document.getElementById("local-video").srcObject = localStream
+        document.getElementById('local-video-text').style.display = "none";
+
+        // peerConn = new RTCPeerConnection(config);
+        // peerConn.addStream(localStream);
+
+        // peerConn.onaddstream = (e)=>{
+        //   document.getElementById("remote-video").srcObject = e.stream;
+        // }
+
+        // peerConn.onicecandidate = ((e) => {
+        //   if (e.candidate == null)
+        //       return
+        //   sendDataToServer({
+        //       type: "store_candidate",
+        //       candidate: e.candidate
+        //   })
+
+          // sendDataToServer({
+          //   type: "send_candidate",
+          //   candidate: e.candidate
+          // })
+
+          // sendDataToServer({
+          //     type: "join_call"
+          // })
+      // })
+
+        // createAndSendOffer();
+
+    }, (error) => {
+        // Show Img as bg instead of dark bg
+        console.log(error)
+    })
+})();
+
+// wsConnection.onmessage = (msg) =>{
+//   var data = JSON.parse(msg.data)
+// }
+
+// wsConnection.onerror = (error) =>{
+//   console.log('Error in establishing connection', error);
+// }
 
 
+// function sendRoomID(){
+//   sendDataToServer({
+//     type: "store-room-id"
+//   })
+// }
 
+// function sendDataToServer(data){
+//   data.roomID = roomID;
+//   socket.emit('send-data', JSON.stringify(data));
+// }
+
+// function createAndSendOffer(){
+//   peerConn.createOffer((offer)=>{
+//     sendDataToServer({
+//       type: "store_offer",
+//       offer: offer
+//     });
+
+//     peerConn.setLocalDescription(offer)
+//   }), (error)=>{
+//     console.log("Err Creating offer", error);
+//   }
+// }

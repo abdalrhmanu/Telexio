@@ -28,9 +28,22 @@ function getRoomUsers(roomID) {
     return users.filter(user => user.roomID === roomID);
 }
 
+function getNumberOfUsers(roomID){
+    // console.log(users[0].roomID === roomID)
+    let j;
+    for(let i = 0; i < users.length; i++){
+        if (users[i].roomID === roomID){ 
+            j++;
+            // console.log(roomID + " has: " + j);
+
+        }
+    }
+}
+
 module.exports = {
     userJoin,
     getCurrentUser,
     userLeave,
-    getRoomUsers
+    getRoomUsers,
+    getNumberOfUsers
 }

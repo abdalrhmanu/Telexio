@@ -14,10 +14,18 @@ const minifyHTML = require('express-minify-html');
 var minify = require('express-minify');
 var compression = require('compression')
 var uglifyEs = require('uglify-es');
+// const webSocketServ = require('ws').Server;
+// const wss = new webSocketServ({
+//   port: 443
+// })
 
 const admin = require("firebase-admin");
 const serviceAccount = require("./config/serviceAccountKey.json");
 
+// const { ExpressPeerServer } = require('peer');
+// const peerServer = ExpressPeerServer(server, {
+//   debug: true
+// });
 
 const lib = require('./config/library');
 const formatMessage = require('./utils/messages');
@@ -25,12 +33,13 @@ const {
     userJoin,
     getCurrentUser, 
     userLeave, 
-    getRoomUsers
+    getRoomUsers,
+    getNumberOfUsers
 } = require('./utils/users');
 
 
 const socketio = require("socket.io");
-const { Socket } = require('dgram');
+// const { Socket } = require('dgram');
 const io = socketio(server);
 
 // var indexRouter = require('./routes/index');
@@ -45,12 +54,17 @@ app.use(csrfMiddleware);
 app.use(compression());
 app.use(minify());
 
+
+// Peer server
+// app.use('/server/webrtc/peerjs', peerServer);
+
+
 app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static('public'));
+// app.use(express.static('public'));
 
 // Main Router File - TODO: Decouple all routes into index.js routes file
 // app.use('/', indexRouter);
@@ -130,36 +144,40 @@ app.get('/', function(req, res, next) {
 });
 
 app.get('/join-meeting', function(req, res, next) {
-  const sessionCookie = req.cookies.session || "";
 
-  admin
-  .auth()
-  .verifySessionCookie(sessionCookie, true /** checkRevoked */)
-  .then(() => {
-    res.render('join-meeting', {
-      url: lib.url,
-    });
-  })
-  .catch((error) => {
-    res.redirect("/login");
+  res.render('join-meeting', {
+    url: lib.url,
   });
+  // const sessionCookie = req.cookies.session || "";
+
+  // admin
+  // .auth()
+  // .verifySessionCookie(sessionCookie, true /** checkRevoked */)
+  // .then(() => {
+    
+  // })
+  // .catch((error) => {
+  //   res.redirect("/join-meeting"); // '/login'
+  // });
 });
 
 app.get('/meeting-room', function(req, res, next) {
 
-  const sessionCookie = req.cookies.session || "";
-
-  admin
-  .auth()
-  .verifySessionCookie(sessionCookie, true /** checkRevoked */)
-  .then(() => {
-    res.render('meeting-room', {
-      url: lib.url,
-    });
-  })
-  .catch((error) => {
-    res.redirect("/login");
+  res.render('meeting-room', {
+    url: lib.url,
   });
+
+  // const sessionCookie = req.cookies.session || "";
+
+  // admin
+  // .auth()
+  // .verifySessionCookie(sessionCookie, true /** checkRevoked */)
+  // .then(() => {
+   
+  // })
+  // .catch((error) => {
+  //   res.redirect("/login"); // 'login'
+  // });
 });
 
 app.get('/meeting-onboarding', function(req, res, next) {
@@ -197,6 +215,7 @@ io.on('connection', socket =>{
     socket.on('joinRoom', ({username, roomID})=>{
         const user = userJoin(socket.id, username, roomID);
         // console.log(user)
+        const numberOfClients = getNumberOfUsers(user.roomID);
 
         socket.join(user.roomID);
 
