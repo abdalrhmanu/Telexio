@@ -33,8 +33,7 @@ const {
     userJoin,
     getCurrentUser, 
     userLeave, 
-    getRoomUsers,
-    getNumberOfUsers
+    getRoomUsers
 } = require('./utils/users');
 
 
@@ -209,31 +208,57 @@ app.get('/signup', function(req, res, next) {
 });
 
 const adminUser = 'Admin';
+var numClients = {};
+
 // Runs when client connects
 io.on('connection', socket =>{
 
     socket.on('joinRoom', ({username, roomID})=>{
         const user = userJoin(socket.id, username, roomID);
-        // console.log(user)
-        const numberOfClients = getNumberOfUsers(user.roomID);
 
-        socket.join(user.roomID);
+        // Block for tracking number of clients joining/leaving meeting rooms
+        // TODO: Handle undefined on server restart and users exist inside room
+        socket.room = roomID;
+        if (numClients[roomID] == undefined) {
+            numClients[roomID] = 1;
+        } else {
+            numClients[roomID]++;
+        }
 
         // Welcome - Emitting msgs from server to client
         socket.emit('message', formatMessage(adminUser, 'Thank you for using ${}, please wait for other participants to join.'));
 
-        // Broadcast when user connects
-        /**
-         * Broadcasting to single client
-         * socket.emit()
-         * 
-         * Broadcasting to all clients except yourself
-         * socket.broadcast.emit()
-         * 
-         * Broadcasting to all the clients in the room
-         * io.emit()
-         */
-        socket.broadcast.to(user.roomID).emit('message', formatMessage(adminUser, `${user.username} has joined the call`));
+
+        if(numClients[roomID] === 1){ // first client
+          console.log("First client in " + roomID);
+          socket.join(user.roomID);
+        }else if(numClients[roomID] === 2){ // second client
+          console.log("Second client in " + roomID);
+          socket.join(user.roomID);
+
+          // Broadcast when user connects
+          /**
+           * Broadcasting to single client
+           * socket.emit()
+           * 
+           * Broadcasting to all clients except yourself
+           * socket.broadcast.emit()
+           * 
+           * Broadcasting to all the clients in the room
+           * io.emit()
+           */
+          socket.broadcast.to(user.roomID).emit('message', formatMessage(adminUser, `${user.username} has joined the call`));
+
+        }else{
+          // Room is full -> Direct to /join-meeting
+          // Initially keep meetings up to 2 clients per room,
+          // TODO: Reject multiple users in same room with same username
+          socket.emit("full-room", roomID);
+
+          // Must decreament the number of users
+          numClients[socket.room]--;
+        }
+
 
         // Sending participants information
         io.to(user.roomID).emit('participants', {
@@ -255,6 +280,9 @@ io.on('connection', socket =>{
     socket.on('disconnect', ()=>{
         const user = userLeave(socket.id);
 
+        // Decrement number of clients on disconnection
+        numClients[socket.room]--;
+
         if(user){
             io.to(user.roomID).emit('message', formatMessage(adminUser, `${user.username} has left the call`));
 
@@ -268,7 +296,6 @@ io.on('connection', socket =>{
 })
 
 // Routes End
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

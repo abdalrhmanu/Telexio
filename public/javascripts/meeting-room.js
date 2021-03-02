@@ -96,6 +96,9 @@ socket.on('message', message =>{
 
 })
 
+// Fired when meeting room is full
+socket.on("full-room", meetingRoomFull);
+
 // socket.on('signalingServerMessage', event =>{
 //   handleSignalingData(JSON.parse(event.data));
 // });
@@ -204,6 +207,16 @@ function toggleChat(){
     HoverStateText.innerText = 'Show Chat';
   }
 }
+
+// Called when socket receives message that room is full
+function meetingRoomFull() {
+  alert(
+    "Meeting room is full. Make sure that there are no multiple tabs opened, or try with a new room link"
+  );
+  // Exit room and redirect
+  window.location.href = "/join-meeting";
+}
+
 
 // Getting Local Stream
 !(async function getMediaTransmission(){
