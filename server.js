@@ -38,6 +38,7 @@ const {
 
 
 const socketio = require("socket.io");
+// const { off } = require('process');
 // const { Socket } = require('dgram');
 const io = socketio(server);
 
@@ -228,7 +229,6 @@ io.on('connection', socket =>{
         // Welcome - Emitting msgs from server to client
         socket.emit('message', formatMessage(adminUser, 'Thank you for using ${}, please wait for other participants to join.'));
 
-
         if(numClients[roomID] === 1){ // first client
           console.log("First client in " + roomID);
           socket.join(user.roomID);
@@ -249,6 +249,10 @@ io.on('connection', socket =>{
            */
           socket.broadcast.to(user.roomID).emit('message', formatMessage(adminUser, `${user.username} has joined the call`));
 
+          // Start Meeting Call
+          // Creating offer...
+          socket.emit("create-offer");
+
         }else{
           // Room is full -> Direct to /join-meeting
           // Initially keep meetings up to 2 clients per room,
@@ -266,6 +270,19 @@ io.on('connection', socket =>{
             users: getRoomUsers(user.roomID) 
         });
 
+    })
+
+    // Handles WebRTC Events
+    socket.on('offer-created', (offer, roomID)  =>{
+      socket.broadcast.to(roomID).emit('received-offer', offer);
+    })
+
+    socket.on('new-ice-candidate', (candidate, roomID) =>{
+      socket.broadcast.to(roomID).emit('received-candidate', candidate);
+    })
+
+    socket.on('answer-created', (answer, roomID)=>{
+      socket.broadcast.to(roomID).emit('received-answer', answer);
     })
 
     // Listen for chatMessage event

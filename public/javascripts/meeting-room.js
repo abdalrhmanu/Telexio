@@ -8,8 +8,6 @@ const socket = io('/');
 const chatForm = document.getElementById('chat-form');
 const chatMessagesDiv = document.getElementById('chat-messages-box');
 // const wsConnection = new WebSocket('ws://localhost:443');
-// let peerConn;
-
 
 let config = {
   iceServers: [
@@ -17,9 +15,26 @@ let config = {
           "urls": ["stun:stun.l.google.com:19302", 
           "stun:stun1.l.google.com:19302", 
           "stun:stun2.l.google.com:19302"]
+      },
+      {
+          "urls": ["turn:13.250.13.83:3478?transport=udp"],
+          "username": "YzYNCouZM1mhqhmseWk6",
+          "credential": "YzYNCouZM1mhqhmseWk6"
+      },
+      {
+          "url": ['turn:192.158.29.39:3478?transport=udp'],
+          "credential": 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+          "username": '28224511:1379330808'
+      },
+      {
+          "url": ['turn:192.158.29.39:3478?transport=tcp'],
+          "credential": 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+          "username": '28224511:1379330808'
       }
+
   ]
 }
+let peerConn = new RTCPeerConnection(config);
 
 
 // wsConnection.onopen = ()=>{
@@ -61,15 +76,6 @@ let selfMsgFlag = false;
 // Join call chatroom
 socket.emit('joinRoom', {username, roomID});
 
-// Get meeting participants - TODO: Integrate and test
-// socket.on('participants', ({roomID, users})=>{
-//     // Function to display on DOM
-// })
-
-// peer.on('open', function(id) {
-//   console.log('My peer ID is: ' + id);
-// });
-
 // message is the event name sent from server, for sending messages
 socket.on('message', message =>{
     // console.log(message);
@@ -95,42 +101,6 @@ socket.on('message', message =>{
     // });
 
 })
-
-// Fired when meeting room is full
-socket.on("full-room", meetingRoomFull);
-
-// socket.on('signalingServerMessage', event =>{
-//   handleSignalingData(JSON.parse(event.data));
-// });
-
-// function handleSignallingData(data) {
-//   switch (data.type) {
-//       case "answer":
-//           peerConn.setRemoteDescription(data.answer)
-//           break
-//       case "candidate":
-//           peerConn.addIceCandidate(data.candidate)
-//           break
-//       // case "offer":
-//       //     peerConn.setRemoteDescription(data.offer)
-//       //     createAndSendAnswer()
-//       //     break
-//       // case "candidate":
-//       //     peerConn.addIceCandidate(data.candidate)
-//   }
-// }
-
-// function createAndSendAnswer () {
-//   peerConn.createAnswer((answer) => {
-//       peerConn.setLocalDescription(answer)
-//       sendDataToServer({
-//           type: "send_answer",
-//           answer: answer
-//       })
-//   }, error => {
-//       console.log(error)
-//   })
-// }
 
 // Message submit
 chatForm.addEventListener('submit', (e)=>{
@@ -208,15 +178,6 @@ function toggleChat(){
   }
 }
 
-// Called when socket receives message that room is full
-function meetingRoomFull() {
-  alert(
-    "Meeting room is full. Make sure that there are no multiple tabs opened, or try with a new room link"
-  );
-  // Exit room and redirect
-  window.location.href = "/join-meeting";
-}
-
 
 // Getting Local Stream
 !(async function getMediaTransmission(){
@@ -239,32 +200,22 @@ function meetingRoomFull() {
         document.getElementById("local-video").srcObject = localStream
         document.getElementById('local-video-text').style.display = "none";
 
-        // peerConn = new RTCPeerConnection(config);
-        // peerConn.addStream(localStream);
+        peerConn.addStream(localStream);
 
-        // peerConn.onaddstream = (e)=>{
-        //   document.getElementById("remote-video").srcObject = e.stream;
-        // }
+        peerConn.onaddstream = (e) => {
+          document.getElementById("remote-video")
+          .srcObject = e.stream;
+          document.getElementById("remote-video").style.backgroundImage = "none";
+        }
 
-        // peerConn.onicecandidate = ((e) => {
-        //   if (e.candidate == null)
-        //       return
-        //   sendDataToServer({
-        //       type: "store_candidate",
-        //       candidate: e.candidate
-        //   })
 
-          // sendDataToServer({
-          //   type: "send_candidate",
-          //   candidate: e.candidate
-          // })
+        // The caller now knows that the callee is ready to accept new ICE candidates, so sending the ICE candidate over
+        peerConn.onicecandidate = ((e) => {
+          socket.emit("new-ice-candidate", JSON.stringify(e.candidate), roomID);
+          console.log("Sending ICE Candidates");
+        })
+        
 
-          // sendDataToServer({
-          //     type: "join_call"
-          // })
-      // })
-
-        // createAndSendOffer();
 
     }, (error) => {
         // Show Img as bg instead of dark bg
@@ -272,35 +223,58 @@ function meetingRoomFull() {
     })
 })();
 
-// wsConnection.onmessage = (msg) =>{
-//   var data = JSON.parse(msg.data)
-// }
 
-// wsConnection.onerror = (error) =>{
-//   console.log('Error in establishing connection', error);
-// }
+// Handling WebRTC Events
 
+// Fired when meeting room is full
+socket.on("full-room", ()=>{
+  // Called when socket receives message that room is full
+  alert(
+    "Meeting room is full. Make sure that there are no multiple tabs opened, or try with a new room link"
+  );
+  // Exit room and redirect
+  window.location.href = "/join-meeting";
 
-// function sendRoomID(){
-//   sendDataToServer({
-//     type: "store-room-id"
-//   })
-// }
+});
 
-// function sendDataToServer(data){
-//   data.roomID = roomID;
-//   socket.emit('send-data', JSON.stringify(data));
-// }
+// Creating offer
+socket.on("create-offer", async function createOffer(){
+  console.log("Creating Offer");
 
-// function createAndSendOffer(){
-//   peerConn.createOffer((offer)=>{
-//     sendDataToServer({
-//       type: "store_offer",
-//       offer: offer
-//     });
+  const offer = await peerConn.createOffer();
+  await peerConn.setLocalDescription(offer);
+  socket.emit('offer-created', JSON.stringify(offer), roomID);
+});
 
-//     peerConn.setLocalDescription(offer)
-//   }), (error)=>{
-//     console.log("Err Creating offer", error);
-//   }
-// }
+// Receiving offer and creating an answer
+socket.on("received-offer", async offer =>{
+  console.log("Offer created and received, creating answer");
+  var rtcOffer = new RTCSessionDescription(JSON.parse(offer)) // try not parsing
+  await peerConn.setRemoteDescription(rtcOffer);
+
+  const answer = await peerConn.createAnswer();
+  await peerConn.setLocalDescription(answer)
+  socket.emit("answer-created", JSON.stringify(answer), roomID);
+
+})
+
+// Received answer from server
+socket.on("received-answer", async answer =>{
+  console.log("answer received and set as session description");
+
+  var rtcAnswer = new RTCSessionDescription(JSON.parse(answer)); // try not parsing
+  await peerConn.setRemoteDescription(rtcAnswer);
+
+  // ICE candidate init initial
+});
+
+socket.on('received-candidate', async candidate =>{
+  rtcCandidate = new RTCIceCandidate(JSON.parse(candidate)); // try not parsing
+
+  try {
+    await peerConnection.addIceCandidate(rtcCandidate)
+    console.log("Candidates Received");
+  } catch (e) {
+      console.error('Error adding received ice candidate', e);
+  }
+})
