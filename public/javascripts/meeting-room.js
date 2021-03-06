@@ -4,88 +4,29 @@ let url = new URL(url_string);
 let roomID = url.searchParams.get("id");
 let username = url.searchParams.get("name");
 
-const socket = io('/');
+const socket = io();
 const chatForm = document.getElementById('chat-form');
 const chatMessagesDiv = document.getElementById('chat-messages-box');
-// const wsConnection = new WebSocket('ws://localhost:443');
-
-let config = {
-  iceServers: [
-      {
-          "urls": ["stun:stun.l.google.com:19302", 
-          "stun:stun1.l.google.com:19302", 
-          "stun:stun2.l.google.com:19302"]
-      },
-      {
-          "urls": ["turn:13.250.13.83:3478?transport=udp"],
-          "username": "YzYNCouZM1mhqhmseWk6",
-          "credential": "YzYNCouZM1mhqhmseWk6"
-      },
-      {
-          "url": ['turn:192.158.29.39:3478?transport=udp'],
-          "credential": 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-          "username": '28224511:1379330808'
-      },
-      {
-          "url": ['turn:192.158.29.39:3478?transport=tcp'],
-          "credential": 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-          "username": '28224511:1379330808'
-      }
-
-  ]
-}
-let peerConn = new RTCPeerConnection(config);
-
-
-// wsConnection.onopen = ()=>{
-//   console.log('Connected to signaling server');
-// }
-
-// var peer = new Peer({undefined,
-//   path: '/server/webrtc/peerjs',
-//   host: '/',
-//   port: '3000', //443 for heroku
-//   config: { 'iceServers': [
-//   { url: 'stun:stun01.sipphone.com' },
-//   { url: 'stun:stun.ekiga.net' },
-//   { url: 'stun:stunserver.org' },
-//   { url: 'stun:stun.softjoys.com' },
-//   { url: 'stun:stun.voiparound.com' },
-//   { url: 'stun:stun.voipbuster.com' },
-//   { url: 'stun:stun.voipstunt.com' },
-//   { url: 'stun:stun.voxgratia.org' },
-//   { url: 'stun:stun.xten.com' },
-//   {
-//     url: 'turn:192.158.29.39:3478?transport=udp',
-//     credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-//     username: '28224511:1379330808'
-//   },
-//   {
-//     url: 'turn:192.158.29.39:3478?transport=tcp',
-//     credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-//     username: '28224511:1379330808'
-//     }
-//   ]
-//   },
-
-//   debug: 3
-//   });
 
 let selfMsgFlag = false;
 
 // Join call chatroom
 socket.emit('joinRoom', {username, roomID});
 
+// Get meeting participants - TODO: Integrate and test
+// socket.on('participants', ({roomID, users})=>{
+//     // Function to display on DOM
+// })
+
 // message is the event name sent from server, for sending messages
 socket.on('message', message =>{
-    // console.log(message);
+    console.log(message);
     outputMessage(message);
 
     // Scroll down - TODO: Test for a long chat and fix if needed
     chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
 
     // Show a Snackbar Toast
-    // Direct to onboarding page, where the user will add in the name, and meeting room id will be keyed in automatically from the shared url
     // Snackbar.show({
     //   text: "Here is the join link for your call: " + url,
     //   actionText: "Copy Link",
@@ -178,103 +119,31 @@ function toggleChat(){
   }
 }
 
+// // Getting Local Stream
+// !(async function getMediaTransmission(){
+//     "use strict";
 
-// Getting Local Stream
-!(async function getMediaTransmission(){
-    "use strict";
-
-    let localStream;
-    navigator.getUserMedia({
-        video: {
-            frameRate: 24,
-            width: {
-                min: 480, ideal: 720, max: 1280
-            },
-            aspectRatio: 1.33333
-        },
-        audio: true
-    }, (stream) => {
+//     let localStream;
+//     navigator.getUserMedia({
+//         video: {
+//             frameRate: 24,
+//             width: {
+//                 min: 480, ideal: 720, max: 1280
+//             },
+//             aspectRatio: 1.33333
+//         },
+//         audio: true
+//     }, (stream) => {
     
-        // Starting video stream
-        localStream = stream
-        document.getElementById("local-video").srcObject = localStream
-        document.getElementById('local-video-text').style.display = "none";
-
-        peerConn.addStream(localStream);
-
-        peerConn.onaddstream = (e) => {
-          document.getElementById("remote-video")
-          .srcObject = e.stream;
-          document.getElementById("remote-video").style.backgroundImage = "none";
-        }
+//         // Starting video stream
+//         localStream = stream
+//         document.getElementById("local-video").srcObject = localStream
+//         document.getElementById('local-video-text').style.display = "none";
+//     }, (error) => {
+//         // Show Img as bg instead of dark bg
+//         console.log(error)
+//     })
+// })();
 
 
-        // The caller now knows that the callee is ready to accept new ICE candidates, so sending the ICE candidate over
-        peerConn.onicecandidate = ((e) => {
-          socket.emit("new-ice-candidate", JSON.stringify(e.candidate), roomID);
-          console.log("Sending ICE Candidates");
-        })
-        
 
-
-    }, (error) => {
-        // Show Img as bg instead of dark bg
-        console.log(error)
-    })
-})();
-
-
-// Handling WebRTC Events
-
-// Fired when meeting room is full
-socket.on("full-room", ()=>{
-  // Called when socket receives message that room is full
-  alert(
-    "Meeting room is full. Make sure that there are no multiple tabs opened, or try with a new room link"
-  );
-  // Exit room and redirect
-  window.location.href = "/join-meeting";
-
-});
-
-// Creating offer
-socket.on("create-offer", async function createOffer(){
-  console.log("Creating Offer");
-
-  const offer = await peerConn.createOffer();
-  await peerConn.setLocalDescription(offer);
-  socket.emit('offer-created', JSON.stringify(offer), roomID);
-});
-
-// Receiving offer and creating an answer
-socket.on("received-offer", async offer =>{
-  console.log("Offer created and received, creating answer");
-  var rtcOffer = new RTCSessionDescription(JSON.parse(offer)) // try not parsing
-  await peerConn.setRemoteDescription(rtcOffer);
-
-  const answer = await peerConn.createAnswer();
-  await peerConn.setLocalDescription(answer)
-  socket.emit("answer-created", JSON.stringify(answer), roomID);
-
-})
-
-// Received answer from server
-socket.on("received-answer", async answer =>{
-  console.log("answer received and set as session description");
-
-  var rtcAnswer = new RTCSessionDescription(JSON.parse(answer)); // try not parsing
-  await peerConn.setRemoteDescription(rtcAnswer);
-
-  // ICE candidate init initial
-});
-
-socket.on('received-candidate', async candidate =>{
-  rtcCandidate = new RTCIceCandidate(JSON.parse(candidate)); // try not parsing
-
-  try {
-    await peerConnection.addIceCandidate(rtcCandidate)
-    console.log("Candidates Received");
-  } catch (e) {
-      console.error('Error adding received ice candidate', e);
-  }
-})

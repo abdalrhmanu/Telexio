@@ -19,10 +19,8 @@
     "http-errors": "~1.6.3",
     "moment": "^2.29.1",
     "morgan": "~1.9.1",
-    "peer": "^0.6.1",
     "socket.io": "^3.1.2",
     "uglify-es": "^3.3.9",
-    "ws": "^7.4.3",
     "wscat": "^4.0.1"
   },
   "devDependencies": {

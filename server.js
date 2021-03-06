@@ -14,18 +14,10 @@ const minifyHTML = require('express-minify-html');
 var minify = require('express-minify');
 var compression = require('compression')
 var uglifyEs = require('uglify-es');
-// const webSocketServ = require('ws').Server;
-// const wss = new webSocketServ({
-//   port: 443
-// })
 
 const admin = require("firebase-admin");
 const serviceAccount = require("./config/serviceAccountKey.json");
 
-// const { ExpressPeerServer } = require('peer');
-// const peerServer = ExpressPeerServer(server, {
-//   debug: true
-// });
 
 const lib = require('./config/library');
 const formatMessage = require('./utils/messages');
@@ -38,8 +30,7 @@ const {
 
 
 const socketio = require("socket.io");
-// const { off } = require('process');
-// const { Socket } = require('dgram');
+const { Socket } = require('dgram');
 const io = socketio(server);
 
 // var indexRouter = require('./routes/index');
@@ -54,17 +45,12 @@ app.use(csrfMiddleware);
 app.use(compression());
 app.use(minify());
 
-
-// Peer server
-// app.use('/server/webrtc/peerjs', peerServer);
-
-
 app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// app.use(express.static('public'));
+app.use(express.static('public'));
 
 // Main Router File - TODO: Decouple all routes into index.js routes file
 // app.use('/', indexRouter);
@@ -144,40 +130,36 @@ app.get('/', function(req, res, next) {
 });
 
 app.get('/join-meeting', function(req, res, next) {
+  const sessionCookie = req.cookies.session || "";
 
-  res.render('join-meeting', {
-    url: lib.url,
+  admin
+  .auth()
+  .verifySessionCookie(sessionCookie, true /** checkRevoked */)
+  .then(() => {
+    res.render('join-meeting', {
+      url: lib.url,
+    });
+  })
+  .catch((error) => {
+    res.redirect("/login");
   });
-  // const sessionCookie = req.cookies.session || "";
-
-  // admin
-  // .auth()
-  // .verifySessionCookie(sessionCookie, true /** checkRevoked */)
-  // .then(() => {
-    
-  // })
-  // .catch((error) => {
-  //   res.redirect("/join-meeting"); // '/login'
-  // });
 });
 
 app.get('/meeting-room', function(req, res, next) {
 
-  res.render('meeting-room', {
-    url: lib.url,
+  const sessionCookie = req.cookies.session || "";
+
+  admin
+  .auth()
+  .verifySessionCookie(sessionCookie, true /** checkRevoked */)
+  .then(() => {
+    res.render('meeting-room', {
+      url: lib.url,
+    });
+  })
+  .catch((error) => {
+    res.redirect("/login");
   });
-
-  // const sessionCookie = req.cookies.session || "";
-
-  // admin
-  // .auth()
-  // .verifySessionCookie(sessionCookie, true /** checkRevoked */)
-  // .then(() => {
-   
-  // })
-  // .catch((error) => {
-  //   res.redirect("/login"); // 'login'
-  // });
 });
 
 app.get('/meeting-onboarding', function(req, res, next) {
@@ -209,60 +191,30 @@ app.get('/signup', function(req, res, next) {
 });
 
 const adminUser = 'Admin';
-var numClients = {};
-
 // Runs when client connects
 io.on('connection', socket =>{
 
     socket.on('joinRoom', ({username, roomID})=>{
         const user = userJoin(socket.id, username, roomID);
+        // console.log(user)
 
-        // Block for tracking number of clients joining/leaving meeting rooms
-        // TODO: Handle undefined on server restart and users exist inside room
-        socket.room = roomID;
-        if (numClients[roomID] == undefined) {
-            numClients[roomID] = 1;
-        } else {
-            numClients[roomID]++;
-        }
+        socket.join(user.roomID);
 
         // Welcome - Emitting msgs from server to client
         socket.emit('message', formatMessage(adminUser, 'Thank you for using ${}, please wait for other participants to join.'));
 
-        if(numClients[roomID] === 1){ // first client
-          console.log("First client in " + roomID);
-          socket.join(user.roomID);
-        }else if(numClients[roomID] === 2){ // second client
-          console.log("Second client in " + roomID);
-          socket.join(user.roomID);
-
-          // Broadcast when user connects
-          /**
-           * Broadcasting to single client
-           * socket.emit()
-           * 
-           * Broadcasting to all clients except yourself
-           * socket.broadcast.emit()
-           * 
-           * Broadcasting to all the clients in the room
-           * io.emit()
-           */
-          socket.broadcast.to(user.roomID).emit('message', formatMessage(adminUser, `${user.username} has joined the call`));
-
-          // Start Meeting Call
-          // Creating offer...
-          socket.emit("create-offer");
-
-        }else{
-          // Room is full -> Direct to /join-meeting
-          // Initially keep meetings up to 2 clients per room,
-          // TODO: Reject multiple users in same room with same username
-          socket.emit("full-room", roomID);
-
-          // Must decreament the number of users
-          numClients[socket.room]--;
-        }
-
+        // Broadcast when user connects
+        /**
+         * Broadcasting to single client
+         * socket.emit()
+         * 
+         * Broadcasting to all clients except yourself
+         * socket.broadcast.emit()
+         * 
+         * Broadcasting to all the clients in the room
+         * io.emit()
+         */
+        socket.broadcast.to(user.roomID).emit('message', formatMessage(adminUser, `${user.username} has joined the call`));
 
         // Sending participants information
         io.to(user.roomID).emit('participants', {
@@ -270,19 +222,6 @@ io.on('connection', socket =>{
             users: getRoomUsers(user.roomID) 
         });
 
-    })
-
-    // Handles WebRTC Events
-    socket.on('offer-created', (offer, roomID)  =>{
-      socket.broadcast.to(roomID).emit('received-offer', offer);
-    })
-
-    socket.on('new-ice-candidate', (candidate, roomID) =>{
-      socket.broadcast.to(roomID).emit('received-candidate', candidate);
-    })
-
-    socket.on('answer-created', (answer, roomID)=>{
-      socket.broadcast.to(roomID).emit('received-answer', answer);
     })
 
     // Listen for chatMessage event
@@ -297,9 +236,6 @@ io.on('connection', socket =>{
     socket.on('disconnect', ()=>{
         const user = userLeave(socket.id);
 
-        // Decrement number of clients on disconnection
-        numClients[socket.room]--;
-
         if(user){
             io.to(user.roomID).emit('message', formatMessage(adminUser, `${user.username} has left the call`));
 
@@ -313,6 +249,7 @@ io.on('connection', socket =>{
 })
 
 // Routes End
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
