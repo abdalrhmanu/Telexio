@@ -64,7 +64,7 @@
                                 </div>
                                
                             </div>
-                            <div class="row start-now-button" id="start-call-button">
+                            <div class="row start-now-button" id="start-call-button" onclick="{window.location.href = '/meeting-room/' + document.getElementById('input-01').value}">
                                 <a>Start Now</a>
                             </div>
                             
@@ -89,19 +89,19 @@
     </body>
 
     <script src="javascripts/room-name-picker.js"></script>
-    <script>
+    <!-- <script>
         document.getElementById('start-call-button').addEventListener('click', ()=>{
 
             var name = document.getElementById('user-name').value;
             var roomID = document.getElementById('input-01').value;
             
             if(roomID.length != 0 && name.length != 0 ){
-                window.location.replace("/meeting-room?id="+roomID+"&name="+name);
+                // window.location.replace("/meeting-room?id="+roomID+"&name="+name);
             }else{
                 alert('Both inputs must be filled before before joining the call');
             }            
 
         })
-    </script>
+    </script> -->
 
 </html>

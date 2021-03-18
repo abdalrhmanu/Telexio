@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162048272-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag("js", new Date());
+        gtag("config", "UA-162048272-1");
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zipcall</title>
+    <link rel="shortcut icon" href="/images/logo.svg" />
+    <script src="https://kit.fontawesome.com/9d7bb7e31a.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="../javascripts/jquery.ui.touch-punch.js"></script>
+    <meta property="og:title" content="Join your friends call - Zipcall" />
+    <meta property="og:description" content="Click the link to join this call using Zipcall" />
+    <meta property="og:image" content="https://zipcall.io/images/preview.png" />
+    <meta property="og:url" content="https://zipcall.io/" />
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Fira+Sans:600|Heebo:400,500,700&display=swap);@-webkit-keyframes fadeIn{from{opacity:0}to{opacity:1}}@-moz-keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}body{background:#16171b;margin:0;padding:0;opacity:0;-webkit-animation:fadeIn ease-in 1;-moz-animation:fadeIn ease-in 1;animation:fadeIn ease-in 1;-webkit-animation-fill-mode:forwards;-moz-animation-fill-mode:forwards;animation-fill-mode:forwards;-webkit-animation-duration:.3s;-moz-animation-duration:.3s;animation-duration:.3s;overflow:hidden}video{background:#16171a}#header{position:absolute;color:#fff;font-family:"Fira Sans",sans-serif;font-weight:600;font-size:1rem;white-space:nowrap;top:20px;left:20px;float:left}#header p,img{float:left;padding:7px}#header,a{color:#fff;text-decoration:none}#moveable{z-index:100;position:absolute;width:15%;cursor:move}#moveable p{z-index:101;position:absolute;color:#fff;font-family:Heebo,sans-serif;white-space:nowrap;top:50%;left:50%;-ms-transform:translate(-50%,-50%);transform:translate(-50%,-50%);font-weight:700;background:rgba(0,0,0,.12);padding:10px;border-radius:5px}#local-video{width:100%;height:auto;border-radius:10px;-webkit-transform:scaleX(-1);transform:scaleX(-1);background:#16171a}#remote-video-text{box-sizing:border-box;margin:0;width:65vw;position:absolute;top:calc(80%);left:20vw;z-index:1;color:#fff;font-family:Heebo,sans-serif;font-size:1.2rem;font-weight:700;text-align:left;background:rgba(0,0,0,.2);border-radius:0 0 10px 10px;padding:10px}#remote-video{padding:0;margin:0;position:absolute;top:50%;left:50%;-ms-transform:translate(-50%,-50%);transform:translate(-50%,-50%);width:65%;height:auto;max-height:100%;max-width:100%;border-radius:10px;background-image:url(../images/loader.gif);background-size:400px auto;background-repeat:no-repeat;background-position:center center}#remote-video.fullscreen{width:100%}.multi-button button{border:none;font-size:1.5rem;transition:all .3s ease-in-out;color:gray;background:0 0;cursor:pointer;padding:7px;border-radius:5px}button:focus{outline:0}button:hover{color:#fff}.multi-button{position:absolute;left:calc(7.5vw - 40px);top:50%;-ms-transform:translate(0,-50%);transform:translate(0,-50%);z-index:999;border-radius:10px;background:#16171a;box-shadow:9px 9px 16px #0a0b0c,-9px -9px 16px #222328;padding:15px;display:flex;flex-direction:column;justify-content:space-around;width:40px}.HoverState{color:#fff;font-family:Heebo,sans-serif;font-size:.8rem;position:absolute;left:60px;white-space:nowrap;top:0;font-weight:700;background:#16171a;padding:10px;border-radius:10px}.buttonContainer{position:relative;margin:0 auto}#entire-chat{position:absolute;height:100%;right:0;width:17.5vw;padding:0}.compose{width:calc(17.5vw - 40px);height:60px;font-family:Heebo,sans-serif;position:fixed;bottom:0;right:0;z-index:100;border-radius:20px;box-shadow:6px 6px 12px #030506,-6px -6px 12px #292a30;margin:20px;box-sizing:border-box;padding:16px;background:#1c1d22;overflow-x:hidden;overflow:-moz-scrollbars-none;-ms-overflow-style:none;scrollbar-width:none}.compose input{font-size:.8rem;border:none;width:100%;height:calc(100% - 5px);resize:none;outline:0;background-color:inherit;color:#fff}.compose input::placeholder{color:#fff;font-size:.8rem}#chat-zone{padding-top:20px;box-sizing:border-box;position:absolute;height:100%;right:0;width:17.5vw;overflow:scroll;font-family:Heebo,sans-serif;font-size:.8rem}#chat-zone::-webkit-scrollbar{width:0!important}#chat-zone .chat-messages .message-item{position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;padding:0 16px 4px;margin-bottom:10px}.chat-messages{overflow-x:hidden;padding-bottom:80px;overflow:-moz-scrollbars-none}#chat-zone .chat-messages .message-item.customer{padding-left:40px}#chat-zone .message-item.moderator .message-bloc{background-color:#1d1e21;color:#fff;position:relative;display:flex;align-items:center;justify-content:center;padding:12px;max-width:100%;border-radius:20px 20px 20px 5px;box-shadow:6px 6px 12px #030506,-6px -6px 12px #23242a}#chat-zone .message-item.customer .message-bloc{background-color:#2f3034;color:#fff;border-radius:20px 20px 5px 20px;box-shadow:6px 6px 12px #030506,-6px -6px 12px #22232a}#chat-zone .chat-messages .message-item.customer .message-bloc{margin-left:auto}#chat-zone .chat-messages .message-item .message-bloc{position:relative;display:flex;align-items:center;justify-content:center;padding:12px;max-width:100%}.message{word-break:break-all}.message a{text-decoration:underline}.cssanimation{animation-duration:1s;animation-fill-mode:both}.fadeInBottom{animation-name:fadeInBottom}@keyframes fadeInBottom{from{opacity:0;transform:translateY(200%)}to{opacity:1}}@media (max-width:640px){body,html{width:100%;height:100%;font-size:1em}#header{z-index:5}#header img{width:auto;height:2rem}#header p{margin:0;line-height:2rem}#remote-video{width:100%;height:100%}#moveable{position:fixed;top:5rem;left:5rem;min-width:20%;min-height:10%;width:initial;height:initial;max-width:25%}#moveable #local-video{width:auto;height:auto;max-width:100%;max-height:100%}#moveable p{text-align:center;z-index:101;position:absolute;color:#fff;font-family:Heebo,sans-serif;white-space:pre-wrap;top:50%;left:50%;-ms-transform:translate(-50%,-50%);transform:translate(-50%,-50%);font-weight:700;font-size:1rem;background:rgba(0,0,0,.12);padding:10px;border-radius:5px;margin:0}#remote-video-text{position:fixed;top:60%!important;bottom:initial;left:initial;width:80%;height:auto;margin:0;margin-left:10%;text-align:center}.multi-button{position:fixed;left:0;top:initial;bottom:0;width:80vw;height:3rem;margin:0 10vw;-ms-transform:translate(0,0);transform:translate(0,0);z-index:999;box-shadow:none;border-radius:10px;padding:0;flex-direction:row}.buttonContainer{position:relative;height:100%;font-size:3rem;display:flex;flex-direction:column;align-items:center;min-width:0;width:100%;margin:0}.multi-button button{position:relative;width:100%;border:none;font-size:2rem;transition:all .3s ease-in-out;color:gray;background:0 0;cursor:pointer;padding:7px;border-radius:5px}.HoverState{display:none!important}.buttonContainer:nth-child(3),.buttonContainer:nth-child(5){display:none}#entire-chat{position:absolute;top:3rem;right:0;height:calc(100% - 3rem - 3rem);width:100vw;padding:0;text-align:center}#chat-zone{position:relative;padding-top:20px;width:100%;height:calc(100% - 2rem);margin-left:0;border-radius:10px}#chat-zone .message-item.customer .message-bloc,#chat-zone .message-item.moderator .message-bloc{box-shadow:none}.compose{position:absolute;font-size:.8rem;left:10%;right:initial;bottom:0;width:80%;height:2rem;margin:.5rem 0;padding:0;box-shadow:none}.compose input{width:90%;height:2rem;line-height:2rem}.compose input::placeholder{color:#fff}}video ::-webkit-media-controls-panel{display:none!important;-webkit-appearance:none}video ::--webkit-media-controls-play-button{display:none!important;-webkit-appearance:none}video ::-webkit-media-controls-start-playback-button{display:none!important;-webkit-appearance:none}
+
+        .snackbar-container{box-shadow:9px 9px 16px #0a0b0c,-9px -9px 16px #222328;transition:all .5s ease;transition-property:top,right,bottom,left,opacity;font-family:Heebo,sans-serif;font-size:14px;min-height:14px;position:fixed;display:flex;justify-content:space-between;align-items:center;color:#b4b4b4;line-height:22px;padding:18px 24px;bottom:-100px;top:-100px;opacity:0;z-index:9999;background-color:#376df9;background:linear-gradient(100deg,#376df9 0,#ff5fa0 75%,#ffc55a 100%)}.snackbar-container .action{background:#fff;padding:7px;border-radius:3px;display:inline-block;border:none;font-size:inherit;text-transform:uppercase;color:#000;margin:0 0 0 24px;min-width:min-content;cursor:pointer}@media (min-width:640px){.snackbar-container{min-width:288px;max-width:568px;display:inline-flex;border-radius:5px;margin:24px}}.snackbar-pos.bottom-center{top:auto!important;bottom:0;left:50%;transform:translate(-50%,0)}.snackbar-pos.bottom-left{top:auto!important;bottom:0;left:0}.snackbar-pos.bottom-right{top:auto!important;bottom:0;right:0}.snackbar-pos.top-left{bottom:auto!important;top:0;left:0}.snackbar-pos.top-center{bottom:auto!important;top:0;left:50%;transform:translate(-50%,0)}.snackbar-pos.top-right{bottom:auto!important;top:0;right:0}@media (max-width:640px){.snackbar-container{position:fixed;top:5rem;bottom:initial;left:calc(10vw - .5rem);right:initial;display:flex;justify-content:space-between;width:80vw!important;min-width:80vw;max-width:80vw;height:auto;margin:0;margin-top:1rem;padding:.5rem;word-wrap:break-word;line-height:1.2rem;font-size:1rem}.snackbar-container p{width:80%}.snackbar-container .action{width:15%;padding:.2rem;border-radius:10px;display:inline-block;border:none;font-size:1rem;text-transform:uppercase;color:#000;margin:0;cursor:pointer}.snackbar-pos.bottom-center,.snackbar-pos.top-center{left:calc(10vw - .5rem);transform:none}}
+    </style>
+</head>
+
+<body id="body" onresize="windowResized()">
+    <div id="header">
+        <a target="_blank" href="/">
+            <img src="/images/logo.svg" alt="Neon" width="48" height="48" />
+            <p>Zipcall</p>
+        </a>
+    </div>
+
+    <p id="remote-video-text"></p>
+    <video id="remote-video" autoplay playsinline></video>
+    <div id="moveable">
+        <p id="local-video-text">No webcam input</p>
+        <video id="local-video" autoplay muted playsinline></video>
+    </div>
+
+    <div id="entire-chat">
+        <div id="chat-zone">
+            <div class="chat-messages"></div>
+        </div>
+        <form class="compose">
+            <input type="text" placeholder="Type a message" />
+        </form>
+    </div>
+
+    <!-- skip -->
+
+    <div class="multi-button">
+        <div class="buttonContainer">
+            <button class="hoverButton" onclick="{muteMicrophone()}">
+                <i id="mic-icon" class="fas fa-microphone fa-xs"></i>
+            </button>
+            <div class="HoverState" id="mic-text">Mute</div>
+        </div>
+
+        <!--      <div class="buttonContainer">-->
+        <!--        <button class="hoverButton" onclick="{openFullscreen()}">-->
+        <!--          <i class="fas fa-compress fa-xs"></i>-->
+        <!--        </button>-->
+        <!--        <div class="HoverState">Fullscreen</div>-->
+        <!--      </div>-->
+
+        <div class="buttonContainer">
+            <button class="hoverButton" onclick="{pauseVideo()}">
+                <i class="fas fa-video fa-xs" id="video-icon"></i>
+            </button>
+            <div class="HoverState" id="video-text">Pause Video</div>
+        </div>
+
+        <div class="buttonContainer">
+            <button class="hoverButton" id="share-button" onclick="{swap()}">
+                <i id="swap-icon" class="fas fa-desktop fa-xs"></i>
+            </button>
+            <div class="HoverState" id="swap-text">Share Screen</div>
+        </div>
+
+        <div class="buttonContainer">
+            <button class="hoverButton" onclick="{toggleChat()}">
+                <i id="chat-icon" class="fas fa-comment fa-xs"></i>
+            </button>
+            <div class="HoverState" id="chat-text">Show Chat</div>
+        </div>
+
+        <div class="buttonContainer">
+            <button class="hoverButton" id="pip-button" onclick="{togglePictureInPicture()}">
+                <i class="fas fa-external-link-alt fa-xs"></i>
+            </button>
+            <div class="HoverState" id="pip-text">Toggle Picture in Picture</div>
+        </div>
+
+        <div class="buttonContainer">
+            <button class="hoverButton" onclick="{requestToggleCaptions()}">
+                <i class="fas fa-closed-captioning fa-xs"></i>
+            </button>
+            <div class="HoverState" id="caption-button-text">
+                Start Live Caption
+            </div>
+        </div>
+
+        <div class="buttonContainer">
+            <button class="hoverButton" onclick="{window.location.href = '/newcall'}">
+                <i class="fas fa-phone-slash fa-xs"></i>
+            </button>
+            <div class="HoverState">End Call</div>
+        </div>
+    </div>
+
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="../javascripts/snackbar.js"></script>
+    <script src="../javascripts/autolink.js"></script>
+    <script src="https://cdn.rawgit.com/muaz-khan/DetectRTC/master/DetectRTC.js"></script>
+    <script id="chatJS" src="../javascripts/chat.js"></script>
+</body>
+
+</html>
