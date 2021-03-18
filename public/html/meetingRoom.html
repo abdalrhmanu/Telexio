@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <script src="https://kit.fontawesome.com/c939d0e917.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="../stylesheets/snackbar.css" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <!-- <script src="/js/jquery.ui.touch-punch.js"></script> -->
+    
+    <title>Document</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap');
+    
+    
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: #16171b;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+    
+        }
+    
+        /* Streaming Section start */
+    
+        .streaming-container {
+            width: 100vw;
+            color: #fff;
+            height: calc(100vh - 70px);
+            display: flex;
+        }
+    
+        .video-streaming-container {
+            width: 100%;
+        }
+    
+        .local-video {
+            position: fixed;
+            top: 40px;
+            left: 70px;
+            width: fit-content;
+            height: 120px;
+            width: 200px;
+            background: #16171b;
+            color: #000;
+            border-radius: 8px;
+            z-index: 4;
+            max-width: 160px;
+        }
+    
+        .remote-video {
+            position: relative;
+            top: -120px;
+            height: 100%;
+            width: 100%;
+            height: 100%;
+            min-height: 120%;
+        }
+    
+        .chat-container {
+            width: 0%;
+            background: #fff;
+            color: #000;
+            display: none;
+            z-index: 4;
+        }
+    
+        .show-chat {
+            display: block;
+            width: 30%;
+        }
+    
+        .resize-stream-container {
+            width: 70%;
+        }
+    
+        @media (max-width: 576px) {
+            .show-chat {
+                width: 100%;
+            }
+    
+            .resize-stream-container {
+                width: 0%;
+            }
+    
+            .local-video {
+                height: 200px;
+                width: 150px;
+                top: 40px;
+                left: 30px;
+            }
+    
+            .local-video {
+                transition: opacity 0.5s;
+                -webkit-transition: opacity 0.5s;
+                opacity: 0.1;
+            }
+    
+            .video-streaming-container:active> .local-vide-container .local-video {
+                transition: opacity 0.5s;
+                -webkit-transition: opacity 0.5s;
+                opacity: 1.0;
+            }
+        }
+    
+    
+        /* Controllers Section start*/
+        .controllers-container {
+            position: fixed;
+            bottom: 0;
+            height: 70px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            background: #fff;
+            z-index: 4;
+        }
+    
+        .controllers-wrapper {
+            width: 100%;
+            max-width: 1170px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+        }
+    
+        .controllers-block div,
+        .controllers-block p,
+        .controllers-block i {
+            cursor: pointer;
+            text-align: center;
+        }
+    
+        .centered-controllers {
+            display: flex;
+            width: 24%;
+        }
+    
+        .middle-controllers-block {
+            border-radius: 25px;
+            margin: 20px;
+            padding: 15px 18px;
+            width: 50px;
+            height: 20px;
+            box-shadow: 0px 3px 30px #00000019;
+            border: 1px solid #dadce0;
+            color: #5f6368;
+        }
+    
+        .video-controller-button,
+        .end-call-controller-button {
+            padding: 15px 15px;
+        }
+    
+        .end-call-controller-button {
+            background: #c1121f;
+            color: #fff;
+        }
+    
+        .end-call-controller-button:hover {
+            background: #780000;
+        }
+
+        .mute-text, .end-call-text, .video-text{
+            display: none;
+            position: absolute;
+            z-index: 4;
+            left: 40.1vw;
+            font-size: 10px;
+            background: #7d7d7d;
+            /* border-radius: 8px; */
+            opacity: 0.9;
+            color: #fff;
+            top: -21px;
+            padding: 5px 12px;
+        }
+
+        .end-call-text{
+            left: 48.1vw;;
+        }
+
+        .video-text{
+            left: 56.1vw;
+        }
+
+        .mute-hover:hover + .mute-text{
+            display: block;
+        }
+        
+        .end-call-controller-button:hover + .end-call-text{
+            display: block;
+        }
+
+        .video-controller-button:hover + .video-text{
+            display: block;
+        }
+    
+        @media (max-width: 576px) {
+    
+            .d-none-xs {
+                display: none;
+            }
+    
+        }
+    
+        /* Controllers section end */
+
+        /* Chat section start */
+        .message-container{
+            height: 100%;
+            padding: 20px;
+            overflow: auto;
+            font-size: 12px;
+            height: 85%;
+        }
+
+        .message-wrapper{
+            margin-top: 20px;
+        }
+
+        .message-head{
+            margin-bottom: 10px;
+        }
+
+        .message-head span{
+            margin-right: 10px;
+        }
+
+        .message-head .sender-name{
+            font-weight: 600;
+        }
+
+        .message-head .sender-time{
+            margin-right: 10px; 
+            font-weight: 100; 
+            font-size: 10px;
+        }
+
+        .input-message-container{
+            height: 2.5%; 
+            padding: 20px; 
+            font-size: 12px; 
+            box-shadow: 0px -7px 6px #00000019;
+        }
+
+        .input-message-container .input-row{
+            width: 100%; 
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .input-box-container{
+            width: 88%;
+        }
+        
+        .input-box{
+            height: 22px;
+            border: 0;
+            outline: none;
+            padding: 4px;
+            width: 88%;
+        }
+
+        .input-box:focus{
+            border-bottom: 1px solid #5f6368;
+        }
+
+        .send-icon{
+            color: #5f6368;
+            font-size: 19px; 
+            cursor: pointer;
+        }
+
+        /* Chat section ends */
+
+        /* Captions section start */
+        .caption-container{
+            position: relative;
+            bottom: 110px;
+            text-align: center;
+            height: fit-content;
+            width: 80%;
+            margin: auto;
+            word-wrap: break-word;
+            color: #fff;
+        }
+
+
+    </style>
+</head>
+<body onresize="windowResized()">
+    
+    <!-- Streaming section -->
+    <div class="streaming-container">
+        <!-- Videos Section -->
+        <div class="video-streaming-container" id="videos-section">
+
+
+            <div class="local-vide-container">
+                <video class="local-video" id="local-video" autoplay muted playsinline></video>
+            </div>
+
+            <div style="height: 100%;">
+                <video class="remote-video" id="remote-video" autoplay playsinline></video>
+
+            </div>
+
+        </div>
+        <!-- Chat section -->
+        <div class="chat-container" id="chat-section">
+            <div class="message-container" id="message-container-box">
+            </div>
+            <div class="input-message-container">
+                <div class="input-row">
+                    <span class="input-box-container">
+                        <input class="input-box" id="chat-input-box" type="text" placeholder="Type a message here ..." required>
+                    </span>
+                    <span class="material-icons send-icon " id="send-msg">
+                        send
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Caption section -->
+    <section class="caption-container">
+        <div id="caption-wrapper">
+            <h2></h2>
+        </div>
+    </section>
+
+    <section>
+        <!-- Controllers section -->
+        <div class="controllers-container">
+            <div class="controllers-wrapper">
+                <div class="controllers-block">
+                    <p>Meeting Details</p>
+                </div>
+                <div class="controllers-block centered-controllers d-none-xs">
+                    <div class="middle-controllers-block mute-hover" onclick="{muteMicrophone()}">
+                        <i class="fas fa-microphone" id="mic-icon"></i>
+                    </div>
+                    <span class="mute-text" id="mute-text">Mute</span>
+
+                    <div class="middle-controllers-block end-call-controller-button"
+                        onclick="{window.location.href = '/newcall'}">
+                        <i class="fas fa-phone-slash"></i>
+                    </div>
+                    <span class="end-call-text">End Call</span>
+
+                    <div class="middle-controllers-block video-controller-button" onclick="{pauseVideo()}">
+                        <i class="fas fa-video" id="video-icon"></i>
+                    </div>
+                    <span class="video-text" id="video-text">Pause video</span>
+
+                </div>
+                <div class="controllers-block" style="display: flex;">
+                    <div style="margin: 20px;" onclick="{requestToggleCaptions()}">Live Captions </div>
+                    <div style="margin: 20px;" onclick="{toggleChat()}">Chat</div>
+                    <div style="margin: 20px;"><i class="fas fa-ellipsis-v"></i></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="../javascripts/snackbar.js"></script>
+    <script src="../javascripts/autolink.js"></script>
+    <script src="https://cdn.rawgit.com/muaz-khan/DetectRTC/master/DetectRTC.js"></script>
+    <script id="chatJS" src="../javascripts/chat.js"></script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,5 +1,3 @@
-"use strict";
-
 var adjectives = [
     "high",
     "small",

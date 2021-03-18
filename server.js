@@ -1,275 +1,124 @@
-const express = require('express');
-const app = express();
-const http = require("http");
-const server = http.createServer(app);
+require("dotenv").config();
+var sslRedirect = require("heroku-ssl-redirect");
+// Get twillio auth and SID from heroku if deployed, else get from local .env file
+var twillioAuthToken =
+  process.env.HEROKU_AUTH_TOKEN || process.env.LOCAL_AUTH_TOKEN;
+var twillioAccountSID =
+  process.env.HEROKU_TWILLIO_SID || process.env.LOCAL_TWILLIO_SID;
+var twilio = require("twilio")(twillioAccountSID, twillioAuthToken);
+var express = require("express");
+var app = express();
+var http = require("http").createServer(app);
+var io = require("socket.io")(http);
+var path = require("path");
+var public = path.join(__dirname, "public");
+const url = require("url");
 
-const logger = require('morgan');
-const path = require('path');
-const createError = require('http-errors');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const csrf = require('csurf');
-const csrfMiddleware = csrf({cookie: true});
-const minifyHTML = require('express-minify-html');
-var minify = require('express-minify');
-var compression = require('compression')
-var uglifyEs = require('uglify-es');
+// enable ssl redirect
+app.use(sslRedirect());
 
-const admin = require("firebase-admin");
-const serviceAccount = require("./config/serviceAccountKey.json");
-
-
-const lib = require('./config/library');
-const formatMessage = require('./utils/messages');
-const {
-    userJoin,
-    getCurrentUser, 
-    userLeave, 
-    getRoomUsers
-} = require('./utils/users');
-
-
-const socketio = require("socket.io");
-const { Socket } = require('dgram');
-const io = socketio(server);
-
-// var indexRouter = require('./routes/index');
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(bodyParser.json())
-app.use(csrfMiddleware);
-
-app.use(compression());
-app.use(minify());
-
-app.set('view engine', 'ejs')
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static('public'));
-
-// Main Router File - TODO: Decouple all routes into index.js routes file
-// app.use('/', indexRouter);
-
-// Routes Start
-
-app.use(minifyHTML({
-  override: true,
-  exception_url: false,
-  htmlMinifier: {
-    removeComments: true,
-    removeAttributeQuotes: false,
-    collapseWhitespace: true,
-    minifyJS: true,
-    minifyCSS: true
+// Remove trailing slashes in url
+app.use(function (req, res, next) {
+  if (req.path.substr(-1) === "/" && req.path.length > 1) {
+    let query = req.url.slice(req.path.length);
+    res.redirect(301, req.path.slice(0, -1) + query);
+  } else {
+    next();
   }
-}));
+});
 
-app.use(minify({
-  cache: false,
-  uglifyJsModule: null,
-  errorHandler: null,
-  jsMatch: /javascripts/, // '/javascript/?'
-  cssMatch: /css/,
-  jsonMatch: /json/,
-  sassMatch: /scss/,
-  lessMatch: /less/,
-  stylusMatch: /stylus/,
-  coffeeScriptMatch: /coffeescript/,
-}));
+app.get("/", function (req, res) {
+  res.redirect('/newcall')
+});
 
-app.use(minify({
-  uglifyJsModule: uglifyEs,
-}));
+app.get("/newcall", function (req, res) {
+  res.sendFile(path.join(public, "/html/newcall.html"));
+});
 
-// Auth
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://meet-video-conferencing-default-rtdb.firebaseio.com/'
-})
+app.get("/meeting-room/", function (req, res) {
+  res.redirect("/");
+});
 
-app.all('*', (req, res, next)=>{
-  res.cookie("XSRF-TOKEN", req.csrfToken());
-  next();
-})
+app.get("/meeting-room/*", function (req, res) {
+  if (Object.keys(req.query).length > 0) {
+    logIt("redirect:" + req.url + " to " + url.parse(req.url).pathname);
+    res.redirect(url.parse(req.url).pathname);
+  } else {
+    res.sendFile(path.join(public, "/html/meetingRoom.html"));
+  }
+});
 
-app.post("/auth/api/sessionLogin", (req, res) => {
-  const idToken = req.body.idToken.toString();
+// Serve static files in the public directory
+app.use(express.static("public"));
 
-  const expiresIn = 60 * 60 * 24 * 5 * 1000;
+// Simple logging function to add room name
+function logIt(msg, room) {
+  if (room) {
+    console.log(room + ": " + msg);
+  } else {
+    console.log(msg);
+  }
+}
 
-  admin
-    .auth()
-    .createSessionCookie(idToken, { expiresIn })
-    .then(
-      (sessionCookie) => {
-        const options = { maxAge: expiresIn, httpOnly: true };
-        res.cookie("session", sessionCookie, options);
-        res.end(JSON.stringify({ status: "success" }));
-      },
-      (error) => {
-        res.status(401).send("UNAUTHORIZED REQUEST!");
+// When a socket connects, set up the specific listeners we will use.
+io.on("connection", function (socket) {
+  // When a client tries to join a room, only allow them if they are first or
+  // second in the room. Otherwise it is full.
+  socket.on("join", function (room) {
+    logIt("A client joined the room", room);
+    var clients = io.sockets.adapter.rooms[room];
+    var numClients = typeof clients !== "undefined" ? clients.length : 0;
+    if (numClients === 0) {
+      socket.join(room);
+    } else if (numClients === 1) {
+      socket.join(room);
+      // When the client is second to join the room, both clients are ready.
+      logIt("Broadcasting ready message", room);
+      // First to join call initiates call
+      socket.broadcast.to(room).emit("willInitiateCall", room);
+      socket.emit("ready", room).to(room);
+      socket.broadcast.to(room).emit("ready", room);
+    } else {
+      logIt("room already full", room);
+      socket.emit("full", room);
+    }
+  });
+
+  // When receiving the token message, use the Twilio REST API to request an
+  // token to get ephemeral credentials to use the TURN server.
+  socket.on("token", function (room) {
+    logIt("Received token request", room);
+    twilio.tokens.create(function (err, response) {
+      if (err) {
+        logIt(err, room);
+      } else {
+        logIt("Token generated. Returning it to the browser client", room);
+        socket.emit("token", response).to(room);
       }
-  );
-});
-
-app.get("/logout", (req, res) => {
-  res.clearCookie("session");
-  res.redirect("/login");
-});
-
-/* GET home page. */
-app.get('/', function(req, res, next) {
-  res.render('index', {
-    url: lib.url,
-  });
-});
-
-app.get('/join-meeting', function(req, res, next) {
-  const sessionCookie = req.cookies.session || "";
-
-  admin
-  .auth()
-  .verifySessionCookie(sessionCookie, true /** checkRevoked */)
-  .then(() => {
-    res.render('join-meeting', {
-      url: lib.url,
     });
-  })
-  .catch((error) => {
-    res.redirect("/login");
+  });
+
+  // Relay candidate messages
+  socket.on("candidate", function (candidate, room) {
+    logIt("Received candidate. Broadcasting...", room);
+    socket.broadcast.to(room).emit("candidate", candidate);
+  });
+
+  // Relay offers
+  socket.on("offer", function (offer, room) {
+    logIt("Received offer. Broadcasting...", room);
+    socket.broadcast.to(room).emit("offer", offer);
+  });
+
+  // Relay answers
+  socket.on("answer", function (answer, room) {
+    logIt("Received answer. Broadcasting...", room);
+    socket.broadcast.to(room).emit("answer", answer);
   });
 });
 
-app.get('/meeting-room', function(req, res, next) {
-
-  const sessionCookie = req.cookies.session || "";
-
-  admin
-  .auth()
-  .verifySessionCookie(sessionCookie, true /** checkRevoked */)
-  .then(() => {
-    res.render('meeting-room', {
-      url: lib.url,
-    });
-  })
-  .catch((error) => {
-    res.redirect("/login");
-  });
-});
-
-app.get('/meeting-onboarding', function(req, res, next) {
-  res.render('meeting-onboarding', {
-    url: lib.url,
-  });
-});
-
-
-app.get('/login', function(req, res, next) {
-
-  const sessionCookie = req.cookies.session || "";
-
-  admin
-  .auth()
-  .verifySessionCookie(sessionCookie, true /** checkRevoked */)
-  .then(() => {
-    res.redirect('/join-meeting');
-  })
-  .catch((error) => {
-    res.render('login')
-  });
-
-  
-});
-
-app.get('/signup', function(req, res, next) {
-  res.redirect('/login')
-});
-
-const adminUser = 'Admin';
-// Runs when client connects
-io.on('connection', socket =>{
-
-    socket.on('joinRoom', ({username, roomID})=>{
-        const user = userJoin(socket.id, username, roomID);
-        // console.log(user)
-
-        socket.join(user.roomID);
-
-        // Welcome - Emitting msgs from server to client
-        socket.emit('message', formatMessage(adminUser, 'Thank you for using ${}, please wait for other participants to join.'));
-
-        // Broadcast when user connects
-        /**
-         * Broadcasting to single client
-         * socket.emit()
-         * 
-         * Broadcasting to all clients except yourself
-         * socket.broadcast.emit()
-         * 
-         * Broadcasting to all the clients in the room
-         * io.emit()
-         */
-        socket.broadcast.to(user.roomID).emit('message', formatMessage(adminUser, `${user.username} has joined the call`));
-
-        // Sending participants information
-        io.to(user.roomID).emit('participants', {
-            roomID: user.roomID,
-            users: getRoomUsers(user.roomID) 
-        });
-
-    })
-
-    // Listen for chatMessage event
-    socket.on('chatMessage', (msg)=>{
-        // Emit back to the client 'everybody'
-        const user = getCurrentUser(socket.id);
-
-        io.to(user.roomID).emit('message', formatMessage(user.username,msg));
-    });
-
-    // Broadcast when a user disconnects
-    socket.on('disconnect', ()=>{
-        const user = userLeave(socket.id);
-
-        if(user){
-            io.to(user.roomID).emit('message', formatMessage(adminUser, `${user.username} has left the call`));
-
-            // Sending participants information
-            io.to(user.roomID).emit('participants', {
-                roomID: user.roomID,
-                users: getRoomUsers(user.roomID) 
-            });
-        }
-    });
-})
-
-// Routes End
-
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    next(createError(404));
-});
-
-  
-// error handler
-app.use(function(err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
-});
-
-
+// Listen for Heroku port, otherwise just use 3000
 var port = process.env.PORT || 3000;
-server.listen(port, function () {
+http.listen(port, function () {
   console.log("http://localhost:" + port);
 });
