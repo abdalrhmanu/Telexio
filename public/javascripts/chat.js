@@ -69,28 +69,29 @@ var VideoChat = {
     VideoChat.localStream = stream;
     // Add the stream as video's srcObject.
     // Now that we have webcam video sorted, prompt user to share URL
-    Snackbar.show({
-      text: "Here is the join link for your call: " + url,
-      actionText: "Copy Link",
-      width: "750px",
-      pos: "top-center",
-      actionTextColor: "#616161",
-      duration: 500000,
-      backgroundColor: "#16171a",
-      onActionClick: function (element) {
-        // Copy url to clipboard, this is achieved by creating a temporary element,
-        // adding the text we want to that element, selecting it, then deleting it
-        var copyContent = window.location.href;
-        $('<input id="some-element">')
-          .val(copyContent)
-          .appendTo("body")
-          .select();
-        document.execCommand("copy");
-        var toRemove = document.querySelector("#some-element");
-        toRemove.parentNode.removeChild(toRemove);
-        Snackbar.close();
-      },
-    });
+
+    // Snackbar.show({
+    //   text: "Here is the join link for your call: " + url,
+    //   actionText: "Copy Link",
+    //   width: "750px",
+    //   pos: "top-center",
+    //   actionTextColor: "#616161",
+    //   duration: 500000,
+    //   backgroundColor: "#16171a",
+    //   onActionClick: function (element) {
+    //     // Copy url to clipboard, this is achieved by creating a temporary element,
+    //     // adding the text we want to that element, selecting it, then deleting it
+    //     var copyContent = window.location.href;
+    //     $('<input id="some-element">')
+    //       .val(copyContent)
+    //       .appendTo("body")
+    //       .select();
+    //     document.execCommand("copy");
+    //     var toRemove = document.querySelector("#some-element");
+    //     toRemove.parentNode.removeChild(toRemove);
+    //     Snackbar.close();
+    //   },
+    // });
     VideoChat.localVideo.srcObject = stream;
     // Now we're ready to join the chat room.
     VideoChat.socket.emit("join", roomHash);
@@ -307,7 +308,7 @@ var VideoChat = {
     // Update remote video source
     VideoChat.remoteVideo.srcObject = event.stream;
     // Close the initial share url snackbar
-    Snackbar.close();
+    // Snackbar.close();
     // Remove the loading gif from video
     VideoChat.remoteVideo.style.background = "none";
     // Update connection status
@@ -512,14 +513,14 @@ function swap() {
   // If mode is camera then switch to screen share
   if (mode === "camera") {
     // Show accept screenshare snackbar
-    Snackbar.show({
-      text:
-        "Please allow screen share. Click the middle of the picture above and then press share.",
-      width: "400px",
-      pos: "bottom-center",
-      actionTextColor: "#616161",
-      duration: 50000,
-    });
+    // Snackbar.show({
+    //   text:
+    //     "Please allow screen share. Click the middle of the picture above and then press share.",
+    //   width: "400px",
+    //   pos: "bottom-center",
+    //   actionTextColor: "#616161",
+    //   duration: 50000,
+    // });
     // Request screen share, note we dont want to capture audio
     // as we already have the stream from the Webcam
     navigator.mediaDevices
@@ -529,7 +530,7 @@ function swap() {
       })
       .then(function (stream) {
         // Close allow screenshare snackbar
-        Snackbar.close();
+        // Snackbar.close();
         // Change display mode
         mode = "screen";
         // Update swap button icon and text
@@ -541,7 +542,7 @@ function swap() {
       .catch(function (err) {
         logM(err);
         logM("Error sharing screen");
-        Snackbar.close();
+        // Snackbar.close();
       });
     // If mode is screenshare then switch to webcam
   } else {
@@ -607,14 +608,14 @@ function requestToggleCaptions() {
     // captionButtontext.text("Start Live Caption");
     receivingCaptions = false;
   } else {
-    Snackbar.show({
-      text:
-        "This is an experimental feature. Live caption requires the other user to be using Chrome",
-      width: "400px",
-      pos: "bottom-center",
-      actionTextColor: "#616161",
-      duration: 10000,
-    });
+    // Snackbar.show({
+    //   text:
+    //     "This is an experimental feature. Live caption requires the other user to be using Chrome",
+    //   width: "400px",
+    //   pos: "bottom-center",
+    //   actionTextColor: "#616161",
+    //   duration: 10000,
+    // });
     // captionButtontext.text("End Live Caption");
     receivingCaptions = true;
   }
@@ -940,20 +941,20 @@ function startUp() {
   // _delay = setInterval(delayCheck, 500);
 
   // Show accept webcam snackbar
-  Snackbar.show({
-    text: "Please allow microphone and webcam access",
-    actionText: "Show Me How",
-    width: "455px",
-    pos: "top-right",
-    actionTextColor: "#616161",
-    duration: 50000,
-    onActionClick: function (element) {
-      window.open(
-        "https://getacclaim.zendesk.com/hc/en-us/articles/360001547832-Setting-the-default-camera-on-your-browser",
-        "_blank"
-      );
-    },
-  });
+  // Snackbar.show({
+  //   text: "Please allow microphone and webcam access",
+  //   actionText: "Show Me How",
+  //   width: "455px",
+  //   pos: "top-right",
+  //   actionTextColor: "#616161",
+  //   duration: 50000,
+  //   onActionClick: function (element) {
+  //     window.open(
+  //       "https://getacclaim.zendesk.com/hc/en-us/articles/360001547832-Setting-the-default-camera-on-your-browser",
+  //       "_blank"
+  //     );
+  //   },
+  // });
 
   // Set caption text on start
   captionText.text("Waiting for other user to join...").fadeIn();

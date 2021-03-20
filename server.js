@@ -6,16 +6,47 @@ var twillioAuthToken =
 var twillioAccountSID =
   process.env.HEROKU_TWILLIO_SID || process.env.LOCAL_TWILLIO_SID;
 var twilio = require("twilio")(twillioAccountSID, twillioAuthToken);
+
+// Express server setup 
 var express = require("express");
 var app = express();
 var http = require("http").createServer(app);
+var PORT = process.env.PORT || 3000;
+
+
+app.set('view engine', 'ejs')
+app.use(express.static('public'))
+
+// Socket.io
 var io = require("socket.io")(http);
+
+const minifyHTML = require('express-minify-html');
 var path = require("path");
 var public = path.join(__dirname, "public");
 const url = require("url");
 
+// Utils
+const logM = require('./utils/logM');
+
 // enable ssl redirect
 app.use(sslRedirect());
+
+// Serve static files in the public directory
+// app.use(express.static("public"));
+
+
+// HTML Minifier
+app.use(minifyHTML({
+  override: true,
+  exception_url: false,
+  htmlMinifier: {
+    removeComments: true,
+    removeAttributeQuotes: false,
+    collapseWhitespace: true,
+    minifyJS: true,
+    minifyCSS: true
+  }
+}));
 
 // Remove trailing slashes in url
 app.use(function (req, res, next) {
@@ -28,7 +59,7 @@ app.use(function (req, res, next) {
 });
 
 app.get("/", function (req, res) {
-  res.redirect('/newcall')
+  res.render('index');
 });
 
 app.get("/newcall", function (req, res) {
@@ -41,31 +72,19 @@ app.get("/meeting-room/", function (req, res) {
 
 app.get("/meeting-room/*", function (req, res) {
   if (Object.keys(req.query).length > 0) {
-    logIt("redirect:" + req.url + " to " + url.parse(req.url).pathname);
+    logM("redirect:" + req.url + " to " + url.parse(req.url).pathname);
     res.redirect(url.parse(req.url).pathname);
   } else {
     res.sendFile(path.join(public, "/html/meetingRoom.html"));
   }
 });
 
-// Serve static files in the public directory
-app.use(express.static("public"));
-
-// Simple logging function to add room name
-function logIt(msg, room) {
-  if (room) {
-    console.log(room + ": " + msg);
-  } else {
-    console.log(msg);
-  }
-}
-
 // When a socket connects, set up the specific listeners we will use.
 io.on("connection", function (socket) {
   // When a client tries to join a room, only allow them if they are first or
   // second in the room. Otherwise it is full.
   socket.on("join", function (room) {
-    logIt("A client joined the room", room);
+    logM("A client joined the room", room);
     var clients = io.sockets.adapter.rooms[room];
     var numClients = typeof clients !== "undefined" ? clients.length : 0;
     if (numClients === 0) {
@@ -73,13 +92,13 @@ io.on("connection", function (socket) {
     } else if (numClients === 1) {
       socket.join(room);
       // When the client is second to join the room, both clients are ready.
-      logIt("Broadcasting ready message", room);
+      logM("Broadcasting ready message", room);
       // First to join call initiates call
       socket.broadcast.to(room).emit("willInitiateCall", room);
       socket.emit("ready", room).to(room);
       socket.broadcast.to(room).emit("ready", room);
     } else {
-      logIt("room already full", room);
+      logM("room already full", room);
       socket.emit("full", room);
     }
   });
@@ -87,12 +106,12 @@ io.on("connection", function (socket) {
   // When receiving the token message, use the Twilio REST API to request an
   // token to get ephemeral credentials to use the TURN server.
   socket.on("token", function (room) {
-    logIt("Received token request", room);
+    logM("Received token request", room);
     twilio.tokens.create(function (err, response) {
       if (err) {
-        logIt(err, room);
+        logM(err, room);
       } else {
-        logIt("Token generated. Returning it to the browser client", room);
+        logM("Token generated. Returning it to the browser client", room);
         socket.emit("token", response).to(room);
       }
     });
@@ -100,25 +119,23 @@ io.on("connection", function (socket) {
 
   // Relay candidate messages
   socket.on("candidate", function (candidate, room) {
-    logIt("Received candidate. Broadcasting...", room);
+    logM("Received candidate. Broadcasting...", room);
     socket.broadcast.to(room).emit("candidate", candidate);
   });
 
   // Relay offers
   socket.on("offer", function (offer, room) {
-    logIt("Received offer. Broadcasting...", room);
+    logM("Received offer. Broadcasting...", room);
     socket.broadcast.to(room).emit("offer", offer);
   });
 
   // Relay answers
   socket.on("answer", function (answer, room) {
-    logIt("Received answer. Broadcasting...", room);
+    logM("Received answer. Broadcasting...", room);
     socket.broadcast.to(room).emit("answer", answer);
   });
 });
 
-// Listen for Heroku port, otherwise just use 3000
-var port = process.env.PORT || 3000;
-http.listen(port, function () {
-  console.log("http://localhost:" + port);
+http.listen(PORT, function () {
+  console.log("http://localhost:" + PORT);
 });
