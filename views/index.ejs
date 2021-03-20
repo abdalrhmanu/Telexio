@@ -3,115 +3,6 @@
 <!-- Head: DON'T DELETE -->
 <%- include ('partials/head') %>
 
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap');
-
-  /* Scroll bar starts */
-  ::-webkit-scrollbar-track{
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-    border-radius: 10px;
-    background-color: #F5F5F5;
-  }
-
-  ::-webkit-scrollbar{
-    width: 12px;
-    background-color: #F5F5F5;
-  }
-
-  ::-webkit-scrollbar-thumb{
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-    background-color: #D3D3D3	;
-  }
-  /* Scroll bar ends */
-
-
-  .body{
-    margin: 0;
-    padding: 0;
-    font-family: 'Open Sans', sans-serif;
-    color: #16171b;
-  }
-
-  /* Hero section starts */
-  .landing-hero-container{
-    color: #16171b; 
-    padding: 35px; 
-    height: 90vh; 
-    display: flex; 
-    align-items: center;
-  }
-  .landing-hero-col h1{
-    font-size: 44px;
-  }
-  .landing-hero-col a{
-    background-color: #2196f3;
-    color: #fff;
-    text-decoration: none;
-    padding: 22px 70px;
-    border-radius: 4px;
-    outline: 0;
-    cursor: pointer;
-    text-transform: capitalize;
-  }
-
-  .landing-hero-col h4{
-    font-size: 20px;
-    font-weight: 300;
-  }
-
-  @media (max-width: 576px) {
-    
-    .landing-hero-col h1{
-      font-size: 39px;
-    }
-
-    .landing-hero-col a{
-        display: block;
-        padding: 18px;
-        text-align: center;
-        font-size: 16px;
-      }
-  }
-  /* Hero section ends */
-
-  /* Features Starts */
-  .features-col-wrapper{
-    text-align: center; 
-    font-size: 34px;
-  }
-  
-  .features-col-wrapper h2{
-    font-weight: 300;
-  }
-
-  .features-row h3{
-    font-size: 22px;
-    font-weight: 600;
-  }
-  
-  .features-box{
-    display: flex; 
-    justify-content: space-between; align-items: center;
-  }
-
-  .features-box .img-wrapper{
-    margin: 0 40px 0 0px;
-  }
-
-  .features-box p{
-    font-size: 20px;  
-  }
-
-  .img-wrapper img{
-    width: 30px;
-  }
-  /* Features ends */
-
-
-
-</style>
-
 <body class="body">
   <!-- Page Header -->
   <%- include ('partials/header') %>
@@ -123,10 +14,13 @@
   <%- include ('partials/landing/features') %>
 
   <!-- Video Demo Section -->
+  <%- include ('partials/landing/demo') %>
 
+  <!-- Try Now Section  -->
+  <%- include ('partials/landing/try-now') %>
 
   <!-- Footer -->
-    
+  <%- include ('partials/footer') %>
 
 </body>
 

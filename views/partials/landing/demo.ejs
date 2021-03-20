@@ -1,0 +1,61 @@
+<%
+let demo = [
+    {
+    head:"Record Special Moments",
+    text:"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
+    url:"/images/landing/video1.mp4",
+    pos:"right"
+    },
+    {
+    head:"Record Special Moments",
+    text:"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
+    url:"/images/landing/video1.mp4",
+    pos:"left"
+    },
+    {
+    head:"Record Special Moments",
+    text:"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,",
+    url:"/images/landing/video1.mp4",
+    pos:"right"
+    }
+]
+%>
+
+<section class="container-fluid">
+<div class="container">
+    <% for (var i=0; i < demo.length; i++ ) { %>
+        <%if (demo[i].pos == "right") {%>
+        <div class="row demo-row">
+            <div class="col-lg-6 col-sm-12">
+            <h2>
+                <%= demo[i].head%>
+            </h2>
+            <p>
+                <%= demo[i].text%>
+            </p>
+            </div>
+            <div class="col-lg-6 col-sm-12 demo-video-col">
+            <video style="width: 100%;" src="<%= demo[i].url%>" autoplay muted loop></video>
+            </div>
+        </div>
+        
+        <%} else {%>
+            <div class="row demo-row">
+            <div class="col-lg-6 col-sm-12 demo-video-col">
+                <video style="width: 100%;" src="<%= demo[i].url%>" autoplay muted loop></video>
+            </div>
+            <div class="col-lg-6 col-sm-12">
+                <h2>
+                <%= demo[i].head%>
+                </h2>
+                <p>
+                <%= demo[i].text%>
+                </p>
+            </div>
+            </div>
+
+        <%}%>
+
+    <% } %>
+</div>
+</section>

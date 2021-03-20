@@ -16,37 +16,37 @@ var data = [
         data:"Your calls and messages stay private and can only be seen by you and the person you're talking with."
     },
     {
-        head:"No download, only within your browser.",
+        head:"No download, only a browser.",
         url:"/images/landing/browser.svg",
         data:"Your meeting will only be available through your browser, no apps to be downloaded."
     }
 ]
 
 %>
-<section class="container-fluid">
+<section class="container-fluid features-container-fluid">
 <div class="container">
     <div class="row">
-    <div class="col-12 features-col-wrapper">
-        <h2>Getting Started</h2>
-    </div>
+        <div class="col-12 features-col-wrapper">
+            <h2>Getting Started</h2>
+        </div>
     </div>
     <div class="row features-row">        
     <% for (var i=0; i < data.length; i++ ) { %>
         <div class="col-lg-6 col-sm-12">
-            <div>
-            <h3>
-                <%= data[i].head %>
-            </h3>
-            <div class="features-box">
-                <span class="img-wrapper">
-                <img src="<%= data[i].url %>" alt="icon">
-                </span>
-                <span>
-                <p>
-                    <%= data[i].data %>
-                </p>
-                </span>
-            </div>
+            <div class="features-wrapper">
+                <h3>
+                    <%= data[i].head %>
+                </h3>
+                <div class="features-box">
+                    <span class="img-wrapper">
+                    <img src="<%= data[i].url %>" alt="icon">
+                    </span>
+                    <span>
+                    <p>
+                        <%= data[i].data %>
+                    </p>
+                    </span>
+                </div>
             </div>
         </div>
         <% } %>
