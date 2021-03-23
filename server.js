@@ -28,6 +28,13 @@ const url = require("url");
 // Utils
 const logM = require('./utils/logM');
 
+// function getFormattedUrl(req) {
+//     return url.format({
+//         protocol: req.protocol,
+//         host: req.get('host')
+//     });
+// }
+
 // enable ssl redirect
 app.use(sslRedirect());
 
@@ -59,11 +66,15 @@ app.use(function (req, res, next) {
 });
 
 app.get("/", function (req, res) {
-  res.render('index');
+  res.render('index', {
+    url: req.originalUrl
+  });
 });
 
-app.get("/newcall", function (req, res) {
-  res.sendFile(path.join(public, "/html/newcall.html"));
+app.get("/new-call", function (req, res) {
+  res.render('new-call', {
+    url: req.originalUrl
+  });
 });
 
 app.get("/meeting-room/", function (req, res) {

@@ -27,6 +27,48 @@
   color: #16171b;
 }
 
+/* Header Starts */
+.header-container-fluid{
+  height: 10vh;
+  box-shadow: 0 3px 6px #00000019;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  width: 100%;
+  background-color: #fff;
+}
+
+.try-now-button{
+  margin: auto;
+  text-align: right;
+}
+
+.try-now-button a{
+  background-color: #2196f3;
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 50px;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+.header-name a{
+  text-decoration: none;
+  color: #16171b;
+  outline: none;
+}
+
+
+@media (max-width: 576px) {
+  .try-now-button a{
+      padding: 12px 23px;
+  }
+}
+/* Header Ends */
+
 /* Hero section starts */
 .landing-hero-container{
   color: #16171b; 
@@ -152,3 +194,32 @@
   }
 }
 /* Footer section ends */
+
+/* /new-call Page */
+
+/* Tabs Start */
+.tablink {
+  background-color: #F8F8F8	;
+  color: #000;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  font-size: 17px;
+  /* TODO : Automate the width based on number of tabs*/
+  width: 50%; 
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+.tablink:hover {
+  background-color: #F3F3F3;  
+}
+
+/* Style the tab content (and add height:90vh as the header takes 10vh) */
+.tabcontent {
+  color: #000;
+  display: none;
+  padding: 100px 20px;
+  height: 90vh;
+}

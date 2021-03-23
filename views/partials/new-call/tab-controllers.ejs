@@ -1,0 +1,20 @@
+<%
+    let tabs = [
+        {
+            class: "tablink",
+            fx: "openPage('new-call', this, '#fff')",
+            id: "defaultOpen",
+            val: "New Call"
+        },
+        {
+            class: "tablink",
+            fx: "openPage('join-call', this, '#fff')",
+            id: "",
+            val: "Join Call"
+        }
+    ]
+%>
+
+<% for (var i=0; i < tabs.length; i++ ) { %>
+    <button class="<%= tabs[i].class%>" onclick="<%= tabs[i].fx%>" id="<%= tabs[i].id%>"><%= tabs[i].val %></button>
+<%}%>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Head: DON'T DELETE -->
+<%- include ('partials/head') %>
+
+<style>
+    
+</style>
+
+<body class="body" style="height: 100vh;">
+    <!-- Page Header -->
+    <%- include ('partials/header') %>
+
+    <!-- TABS CONTROLLERS -->
+    <%- include ('partials/new-call/tab-controllers') %>
+    
+
+    <!-- New Call Tab Section -->
+    <div id="new-call" class="tabcontent">
+        <div class="container-fluid">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12">
+                        <h1>New Call</h1>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <p>This is new call section</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Join Call Tab Section -->
+    <div id="join-call" class="tabcontent">
+        <div class="container-fluid">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12">
+                        <h1>Join Call</h1>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <p>This is join call section</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    function openPage(pageName, elmnt, color) {
+            // Hide all elements with class="tabcontent" by default */
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Remove the background color of all tablinks/buttons
+            tablinks = document.getElementsByClassName("tablink");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].style.backgroundColor = "";
+            }
+
+            // Show the specific tab content
+            document.getElementById(pageName).style.display = "block";
+
+            // Add the specific color to the button used to open the tab content
+            elmnt.style.backgroundColor = color;
+        }
+
+        // Get the element with id="defaultOpen" and click on it
+        document.getElementById("defaultOpen").click();
+</script>
+</html>
