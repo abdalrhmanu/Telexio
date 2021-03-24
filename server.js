@@ -77,6 +77,15 @@ app.get("/new-call", function (req, res) {
   });
 });
 
+
+
+app.get("/join-call", function (req, res) {
+  res.render('join-call', {
+    url: req.originalUrl
+  });
+});
+
+
 app.get("/meeting-room/", function (req, res) {
   res.redirect("/");
 });
