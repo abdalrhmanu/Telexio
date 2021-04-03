@@ -2,22 +2,21 @@
     <div class="container join-call-container-block">
         <div class="row">
             <div class="col-12">
-                <h1>Join Call</h1>
+                <h1><%= lib.join_call_hero_header %></h1>
 
                 <div class="join-call-input-wrapper">
-                    <label for="input-room">Call ID or Personal Link Name</label>
+                    <label for="input-room"><%= lib.join_call_hero_subheader %></label>
                     <input type="text" placeholder="Enter Call ID or personal Room Name">
                 </div>
 
                 <div class="join-call-button-wrapper">
-                    <button>Join</button>
+                    <button><%= lib.join_call_button %></button>
                 </div>
 
                 <!-- Alerting if the room doesn't exist in server db -->
                 <div class="join-call-alert-wrapper">
-                    <h4>There is no current call existing with this id. Please ensure that you have typed the correct id
-                        value.</h4>
-                    <a>Create a new call with the same id?</a>
+                    <h4><%= lib.join_call_alerting_main %></h4>
+                    <a><%= lib.join_call_alerting_secondary %></a>
                 </div>
             </div>
         </div>

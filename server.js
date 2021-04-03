@@ -6,6 +6,7 @@ var twillioAuthToken =
 var twillioAccountSID =
   process.env.HEROKU_TWILLIO_SID || process.env.LOCAL_TWILLIO_SID;
 var twilio = require("twilio")(twillioAccountSID, twillioAuthToken);
+var library = require("./config/library");
 
 // Express server setup 
 var express = require("express");
@@ -67,13 +68,15 @@ app.use(function (req, res, next) {
 
 app.get("/", function (req, res) {
   res.render('index', {
-    url: req.originalUrl
+    url: req.originalUrl,
+    lib: library.url
   });
 });
 
 app.get("/new-call", function (req, res) {
   res.render('new-call', {
-    url: req.originalUrl
+    url: req.originalUrl,
+    lib: library.url
   });
 });
 
@@ -81,7 +84,8 @@ app.get("/new-call", function (req, res) {
 
 app.get("/join-call", function (req, res) {
   res.render('join-call', {
-    url: req.originalUrl
+    url: req.originalUrl,
+    lib: library.url
   });
 });
 
