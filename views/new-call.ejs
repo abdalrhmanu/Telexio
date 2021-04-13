@@ -3,27 +3,20 @@
 <!-- Head: DON'T DELETE -->
 <%- include ('partials/head') %>
 
-<style>
-    
-</style>
+    <style>
+        body,
+        html {
+            height: 100%;
+            font-family: 'Open Sans';
+        }
+    </style>
 
-<body class="body" style="height: 100vh;">
-    <!-- Page Header -->
-    <%- include ('partials/header') %>
+    <body class="body">
+        <!-- Page Header -->
+        <%- include ('partials/header') %>
 
-    <!-- New Call Tab Section -->
-    <div class="container-fluid">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6 col-sm-12">
-                    <h1>New Call</h1>
-                </div>
-                <div class="col-lg-6 col-sm-12">
-                    <p>This is new call section</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
+            <!-- Join Call Hero Section -->
+            <%- include ('partials/new-call/new-call-hero') %>
+    </body>
 
 </html>

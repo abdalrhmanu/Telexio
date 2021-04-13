@@ -26,6 +26,12 @@ var path = require("path");
 var public = path.join(__dirname, "public");
 const url = require("url");
 
+const apicache = require('apicache');
+const cache = apicache.options({
+  statusCodes: {
+  exclude:[404,500] // list status codes to specifically exclude (e.g. [404, 403] cache all responses unless they had a 404 or 403 status)
+}}).middleware;
+
 // Utils
 const logM = require('./utils/logM');
 
@@ -66,6 +72,7 @@ app.use(function (req, res, next) {
   }
 });
 
+//  cache("3 days"),
 app.get("/", function (req, res) {
   res.render('index', {
     url: req.originalUrl,
@@ -73,7 +80,8 @@ app.get("/", function (req, res) {
   });
 });
 
-app.get("/new-call", function (req, res) {
+// cache("3 days"),
+app.get("/new-call",  function (req, res) {
   res.render('new-call', {
     url: req.originalUrl,
     lib: library.url
@@ -81,8 +89,8 @@ app.get("/new-call", function (req, res) {
 });
 
 
-
-app.get("/join-call", function (req, res) {
+// cache("3 days"),
+app.get("/join-call",  function (req, res) {
   res.render('join-call', {
     url: req.originalUrl,
     lib: library.url

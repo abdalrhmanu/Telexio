@@ -19,12 +19,13 @@ var library = {
         join_call_hero_subheader: "Call ID or Personal Link Name",
         join_call_button: "Join",
         join_call_alerting_main: "There is no current call existing with this id. Please ensure that you have typed the correct id value.",
-        join_call_alerting_secondary: "Create a new call with the same id?"
+        join_call_alerting_secondary: "Create a new call with the same id?",
 
 
         // New Call Page
-
-
+        new_call_hero_header: "Join Call",
+        new_call_hero_subheader: "Please enter a unique room name.",
+        new_call_button: "Create"
     }
 }
 

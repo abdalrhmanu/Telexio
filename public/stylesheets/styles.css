@@ -45,7 +45,7 @@
   text-align: right;
 }
 
-.try-now-button a{
+.try-now-button .primary{
   background-color: #2196f3;
   color: #fff;
   text-decoration: none;
@@ -53,6 +53,19 @@
   border-radius: 4px;
   outline: none;
   cursor: pointer;
+}
+
+.try-now-button .secondary{
+  color: #2196f3;
+  text-decoration: none;
+  outline: none;
+  cursor: pointer;
+  border-bottom: 1px solid #2196f3;
+  padding-bottom: 10px;
+}
+
+.try-now-button a {
+  margin: 20px;
 }
 
 .header-name a{
@@ -64,7 +77,11 @@
 
 @media (max-width: 576px) {
   .try-now-button a{
-      padding: 12px 23px;
+      margin: 0 0 0 10px;
+  }
+
+  .try-now-button .primary{
+    padding: 12px 10px;
   }
 }
 /* Header Ends */

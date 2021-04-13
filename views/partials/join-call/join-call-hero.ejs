@@ -6,11 +6,11 @@
 
                 <div class="join-call-input-wrapper">
                     <label for="input-room"><%= lib.join_call_hero_subheader %></label>
-                    <input type="text" placeholder="Enter Call ID or personal Room Name">
+                    <input id="roomID" type="text" placeholder="Enter Call ID or personal Room Name">
                 </div>
 
                 <div class="join-call-button-wrapper">
-                    <button><%= lib.join_call_button %></button>
+                    <button onclick="joinRoom()"><%= lib.join_call_button %></button>
                 </div>
 
                 <!-- Alerting if the room doesn't exist in server db -->
@@ -22,3 +22,14 @@
         </div>
     </div>
 </div>
+
+<script>
+    function joinRoom() {
+        let roomID = document.getElementById("roomID").value;
+        if (roomID.length > 6) {
+            window.location = `/meeting-room/${roomID}`;
+        } else {
+            alert("Please enter a unique id more than 6 digits number.")
+        }
+    }
+</script>

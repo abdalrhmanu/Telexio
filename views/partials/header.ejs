@@ -11,14 +11,27 @@
     let display;
     
     if(url == "/" ){
-        colLogo = "col-6";
-        colBtn = "col-6";
+        colLogo = "col-2";
+        colBtn = "col-10";
     }else{
         colLogo = "col-12";
         colBtn = ""
         align = "center";
         display = "none";
     }
+
+    let components = [
+    {
+        url:"join-call",
+        innerText: "Join A Call",
+        class:"secondary"
+    },
+    {
+        url:"new-call",
+        innerText: "Try For Free",
+        class:"primary"
+    }    
+    ]
 
 %>
 
@@ -35,7 +48,9 @@
             </div>
             <div class="<%= colBtn %> try-now-button" style="display:  <%= display %> ;">
                 <div>
-                    <a href="/new-call" target="_blank"><%= lib.button_try_for_free %></a>
+                    <% for(let i = 0; i<components.length; i++ ){ %>
+                        <a class="<%= components[i].class %>" href="/<%= components[i].url %>" target="_blank"><%= components[i].innerText %></a>
+                        <%}%>
                 </div>
             </div>
         </div>
