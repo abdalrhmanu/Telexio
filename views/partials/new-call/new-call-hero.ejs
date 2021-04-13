@@ -1,0 +1,29 @@
+<div class="container-fluid join-call-container-fluid-section">
+    <div class="container join-call-container-block">
+        <div class="row">
+            <div class="col-12">
+                <h1><%= lib.new_call_hero_header %></h1>
+
+                <div class="join-call-input-wrapper">
+                    <label for="input-room"><%= lib.new_call_hero_subheader %></label>
+                    <input type="text" id="roomID" placeholder="Enter Call ID or personal Room Name">
+                </div>
+
+                <div class="join-call-button-wrapper">
+                    <button onclick="createRoom()"><%= lib.new_call_button %></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function createRoom(){
+        let roomID = document.getElementById("roomID").value;
+            if(roomID.length > 6){
+                window.location = `/meeting-room/${roomID}`;
+            }else{
+                alert("Please enter a unique id more than 6 digits number.")
+            }
+    }
+</script>
