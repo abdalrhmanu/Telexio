@@ -1,49 +1,56 @@
-<style>
-    .header-container-fluid{
-        height: 10vh;
-        box-shadow: 0 3px 6px #00000019;
-        display: flex;
-        align-items: center;
-        position: sticky;
-        top: 0;
-        z-index: 4;
-        width: 100%;
-        background-color: #fff;
-    }
 
-    .try-now-button{
-        margin: auto;
-        text-align: right;
-    }
 
-    .try-now-button a{
-        background-color: #2196f3;
-        color: #fff;
-        text-decoration: none;
-        padding: 12px 50px;
-        border-radius: 4px;
-        outline: none;
-        cursor: pointer;
-    }
+<%# Comment:
+    Styling the header based on the url route, for more friendly UI for Phone view,URL parameter comes from theserverside which will pass the route value here. 
+%>
+<%  
+    let colLogo;
+    let colBtn;
 
+    let align;
+    let display;
     
-    @media (max-width: 576px) {
-        .try-now-button a{
-            padding: 12px 23px;
-        }
+    if(url == "/" ){
+        colLogo = "col-2";
+        colBtn = "col-10";
+    }else{
+        colLogo = "col-12";
+        colBtn = ""
+        align = "center";
+        display = "none";
     }
 
-</style>
+    let components = [
+    {
+        url:"join-call",
+        innerText: "Join A Call",
+        class:"secondary"
+    },
+    {
+        url:"new-call",
+        innerText: "Try For Free",
+        class:"primary"
+    }    
+    ]
+
+%>
 
 <section class="container-fluid header-container-fluid">
     <div class="container">
         <div class="row">
-            <div class="col-6">
-                <h2>Connect</h2>
+            <div class="<%= colLogo %>" style="text-align: <%= align %>" >
+                <h2 class="header-name">
+
+                    <a href="/">
+                        <%= lib.app_name %>
+                    </a>
+                </h2>
             </div>
-            <div class="col-6 try-now-button">
+            <div class="<%= colBtn %> try-now-button" style="display:  <%= display %> ;">
                 <div>
-                    <a href="/newcall" target="_blank">Try For Free</a>
+                    <% for(let i = 0; i<components.length; i++ ){ %>
+                        <a class="<%= components[i].class %>" href="/<%= components[i].url %>" target="_blank"><%= components[i].innerText %></a>
+                        <%}%>
                 </div>
             </div>
         </div>
