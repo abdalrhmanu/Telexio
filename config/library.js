@@ -2,7 +2,7 @@ var library = {
     url: {
         // Global
         subdir: "",
-        app_name: "Medco",
+        app_name: "MEDICA",
         app_copyright: "Copyright © Connect 2021 by ABDELRAHMAN USAMA",
         button_try_for_free: "Try For Free",
 

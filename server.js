@@ -26,6 +26,13 @@ var path = require("path");
 var public = path.join(__dirname, "public");
 const url = require("url");
 
+const csrf = require('csurf');
+const csrfMiddleware = csrf({cookie: true});
+const cookieParser = require('cookie-parser');
+
+const admin = require("firebase-admin");
+const serviceAccount = require("./config/serviceAccountKey.json");
+
 const apicache = require('apicache');
 const cache = apicache.options({
   statusCodes: {
@@ -35,15 +42,11 @@ const cache = apicache.options({
 // Utils
 const logM = require('./utils/logM');
 
-// function getFormattedUrl(req) {
-//     return url.format({
-//         protocol: req.protocol,
-//         host: req.get('host')
-//     });
-// }
 
 // enable ssl redirect
 app.use(sslRedirect());
+app.use(cookieParser());
+app.use(csrfMiddleware);
 
 // Serve static files in the public directory
 // app.use(express.static("public"));
@@ -61,6 +64,67 @@ app.use(minifyHTML({
     minifyCSS: true
   }
 }));
+
+// Auth
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://meet-video-conferencing-default-rtdb.firebaseio.com/'
+})
+
+app.all('*', (req, res, next)=>{
+  res.cookie("XSRF-TOKEN", req.csrfToken());
+  next();
+})
+
+app.post("/auth/api/sessionLogin", (req, res) => {
+  const idToken = req.body.idToken.toString();
+
+  const expiresIn = 60 * 60 * 24 * 5 * 1000;
+
+  admin
+    .auth()
+    .createSessionCookie(idToken, { expiresIn })
+    .then(
+      (sessionCookie) => {
+        const options = { maxAge: expiresIn, httpOnly: true };
+        res.cookie("session", sessionCookie, options);
+        res.end(JSON.stringify({ status: "success" }));
+      },
+      (error) => {
+        res.status(401).send("UNAUTHORIZED REQUEST!");
+      }
+  );
+});
+
+app.get("/logout", (req, res) => {
+  res.clearCookie("session");
+  res.redirect("/login");
+});
+
+
+app.get('/login', function(req, res, next) {
+
+  const sessionCookie = req.cookies.session || "";
+
+  admin
+  .auth()
+  .verifySessionCookie(sessionCookie, true /** checkRevoked */)
+  .then(() => {
+    res.redirect('/join-meeting');
+  })
+  .catch((error) => {
+    res.render('login', {
+      url: req.originalUrl,
+      lib: library.url
+    });
+  });
+
+  
+});
+
+app.get('/signup', function(req, res, next) {
+  res.redirect('/login')
+});
 
 // Remove trailing slashes in url
 app.use(function (req, res, next) {
@@ -97,6 +161,13 @@ app.get("/join-call",  function (req, res) {
   });
 });
 
+app.get("/meeting-room-v2", function (req, res) {
+    res.sendFile(path.join(public, "/html/meetingRoom2.html"));
+});
+
+app.get("/test", function (req, res) {
+    res.render('playground/meeting-room-playground');
+});
 
 app.get("/meeting-room/", function (req, res) {
   res.redirect("/");

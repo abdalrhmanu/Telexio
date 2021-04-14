@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body class="body">
+    <style>
+        .body{
+            margin: 0;
+            padding: 0;
+        }
+        .video-lg-wrapper{
+            position: relative;
+            background-color: #000;
+            height: 90vh;
+            width: 100vw;
+        }
+        .controller-wrapper{
+            background-color: #fff;
+            height: 10vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .secondary-video-wrapper{
+            position: absolute;
+            height: 520px;
+            right: 5vw;
+            top: 5vh;
+            overflow: auto;
+        }
+        .secondary-video{
+            background-color: #fff;
+            width: 250px;
+            height: 150px;
+            margin-bottom: 30px;
+            display: block;
+        }
+        .left-controllers-wrapper, .right-controllers-wrapper{
+            width: 200px;
+            text-align: center;
+            margin: 20px;
+            cursor: pointer;
+        }
+        .middle-controllers-wrapper{
+            display: inline-block;
+            margin: 20px;
+        }
+        .middle-controllers-wrapper span{
+            display: inline-block;
+            width: 100px;           
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        @media (max-width: 576px) {
+            .controller-wrapper{
+                display: none;
+            }
+            .video-lg-wrapper{
+                height: 100vh;
+            }
+            .secondary-video-wrapper{
+                right: 0;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                display: flex;
+                overflow: auto;
+                height: fit-content;
+                margin-top: auto;
+            }
+            .secondary-video{
+                display: inline-block;
+                margin: 0;
+                min-width: 250px;
+                margin: 20px;
+            }
+
+        }
+    </style>
+    <div class="video-lg-wrapper">
+        <div class="main-video"></div>
+        <div class="secondary-video-wrapper">
+            <span class="secondary-video"></span>
+            <span class="secondary-video"></span>
+            <span class="secondary-video"></span>
+            <span class="secondary-video"></span>
+            <span class="secondary-video"></span>
+            <span class="secondary-video"></span>
+        </div>
+
+
+    </div>
+    <div class="controller-wrapper">
+        <div class="left-controllers-wrapper">
+            <div>
+                <p>Invite</p>
+            </div>
+        </div>
+        <div class="middle-controllers-wrapper">
+            <span>
+                <p>Mute</p>
+            </span>
+            <span>
+                End Call
+            </span>
+            <span>
+                Video Off
+            </span>
+        </div>
+        <div class="right-controllers-wrapper">
+            <div>
+                <p>Chat</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
