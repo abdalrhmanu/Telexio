@@ -27,6 +27,7 @@
     }
 
     
+<<<<<<< HEAD
     @media (max-width: 576px) {
         .try-now-button a{
             padding: 12px 23px;
@@ -34,6 +35,19 @@
     }
 
 </style>
+=======
+    if(url == "/" ){
+        colLogo = "col-6";
+        colBtn = "col-6";
+    }else{
+        colLogo = "col-12";
+        colBtn = ""
+        align = "center";
+        display = "none";
+    }
+
+%>
+>>>>>>> parent of 4248984 (Implemented apichache, library file, new-call and join-call routes)
 
 <section class="container-fluid header-container-fluid">
     <div class="container">
@@ -43,7 +57,11 @@
             </div>
             <div class="col-6 try-now-button">
                 <div>
+<<<<<<< HEAD
                     <a href="/newcall" target="_blank">Try For Free</a>
+=======
+                    <a href="/new-call" target="_blank"><%= lib.button_try_for_free %></a>
+>>>>>>> parent of 4248984 (Implemented apichache, library file, new-call and join-call routes)
                 </div>
             </div>
         </div>
