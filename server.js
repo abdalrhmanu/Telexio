@@ -6,7 +6,6 @@ var twillioAuthToken =
 var twillioAccountSID =
   process.env.HEROKU_TWILLIO_SID || process.env.LOCAL_TWILLIO_SID;
 var twilio = require("twilio")(twillioAccountSID, twillioAuthToken);
-var library = require("./config/library");
 
 // Express server setup 
 var express = require("express");
@@ -26,21 +25,8 @@ var path = require("path");
 var public = path.join(__dirname, "public");
 const url = require("url");
 
-const apicache = require('apicache');
-const cache = apicache.options({
-  statusCodes: {
-  exclude:[404,500] // list status codes to specifically exclude (e.g. [404, 403] cache all responses unless they had a 404 or 403 status)
-}}).middleware;
-
 // Utils
 const logM = require('./utils/logM');
-
-// function getFormattedUrl(req) {
-//     return url.format({
-//         protocol: req.protocol,
-//         host: req.get('host')
-//     });
-// }
 
 // enable ssl redirect
 app.use(sslRedirect());
@@ -72,31 +58,13 @@ app.use(function (req, res, next) {
   }
 });
 
-//  cache("3 days"),
 app.get("/", function (req, res) {
-  res.render('index', {
-    url: req.originalUrl,
-    lib: library.url
-  });
+  res.render('index');
 });
 
-// cache("3 days"),
-app.get("/new-call",  function (req, res) {
-  res.render('new-call', {
-    url: req.originalUrl,
-    lib: library.url
-  });
+app.get("/newcall", function (req, res) {
+  res.sendFile(path.join(public, "/html/newcall.html"));
 });
-
-
-// cache("3 days"),
-app.get("/join-call",  function (req, res) {
-  res.render('join-call', {
-    url: req.originalUrl,
-    lib: library.url
-  });
-});
-
 
 app.get("/meeting-room/", function (req, res) {
   res.redirect("/");
