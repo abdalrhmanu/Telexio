@@ -62,30 +62,10 @@ app.get("/", function (req, res) {
   res.render('index');
 });
 
-<<<<<<< HEAD
 app.get("/newcall", function (req, res) {
   res.sendFile(path.join(public, "/html/newcall.html"));
 });
 
-=======
-app.get("/new-call", function (req, res) {
-  res.render('new-call', {
-    url: req.originalUrl,
-    lib: library.url
-  });
-});
-
-
-
-app.get("/join-call", function (req, res) {
-  res.render('join-call', {
-    url: req.originalUrl,
-    lib: library.url
-  });
-});
-
-
->>>>>>> parent of 4248984 (Implemented apichache, library file, new-call and join-call routes)
 app.get("/meeting-room/", function (req, res) {
   res.redirect("/");
 });

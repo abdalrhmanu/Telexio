@@ -27,51 +27,6 @@
   color: #16171b;
 }
 
-<<<<<<< HEAD
-=======
-/* Header Starts */
-.header-container-fluid{
-  height: 10vh;
-  box-shadow: 0 3px 6px #00000019;
-  display: flex;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 4;
-  width: 100%;
-  background-color: #fff;
-}
-
-.try-now-button{
-  margin: auto;
-  text-align: right;
-}
-
-.try-now-button a{
-  background-color: #2196f3;
-  color: #fff;
-  text-decoration: none;
-  padding: 12px 50px;
-  border-radius: 4px;
-  outline: none;
-  cursor: pointer;
-}
-
-.header-name a{
-  text-decoration: none;
-  color: #16171b;
-  outline: none;
-}
-
-
-@media (max-width: 576px) {
-  .try-now-button a{
-      padding: 12px 23px;
-  }
-}
-/* Header Ends */
-
->>>>>>> parent of 4248984 (Implemented apichache, library file, new-call and join-call routes)
 /* Hero section starts */
 .landing-hero-container{
   color: #16171b; 
