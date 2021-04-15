@@ -8,22 +8,12 @@
     <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js" defer></script>
     <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js" defer></script>
-
-    <section class="container-fluid" style="height: 160px; margin-bottom: 25px;">
-        <div class="container">
-            <div class="row">
-                <header style="font-family: Fira Sans, sans-serif;font-weight: 600;font-size: 1rem;">
-                    <a target="_blank" href="/">
-                        <img src="/images/logo.svg" alt="Neon" width="48" height="48" />
-                    </a>
-                </header>
-            </div>
-        </div>
-    </section>
+    
+    <!-- Page Header -->
+    <%- include ('partials/header') %>
 
 
-
-    <section class="container-fluid">
+    <!-- <section class="container-fluid">
         <div class="container">
             <div class="row">
                 <div class="col-8">
@@ -63,9 +53,30 @@
                 <div class="col-4"></div>
             </div>
         </div>
-    </section>
+    </section> -->
 
-    <script>
+    <section class="container-fluid" style="    max-width: 640px;
+    height: 640px;
+    display: flex;
+    align-items: center;">
+        <div class="container">
+            <div class="row">
+                <div class="button-wrapper" style="    width: 100%;
+                margin: 10px 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                background-color: rgb(51, 51, 51);
+                cursor: pointer;">
+                    <img style="margin: 10px;" src="/images/github-dark.svg" alt="">
+                    <span>Log in with GitHub</span>
+                </div>
+            </div>
+        </div>
+    </section>
+           
+    <!-- <script>
         window.addEventListener("DOMContentLoaded", () => {
 
             const firebaseConfig = {
@@ -123,7 +134,7 @@
             });
 
         });
-      </script>
+      </script> -->
 
       <script src="javascripts/snackbar.js"></script>
 

@@ -110,7 +110,7 @@ app.get('/login', function(req, res, next) {
   .auth()
   .verifySessionCookie(sessionCookie, true /** checkRevoked */)
   .then(() => {
-    res.redirect('/join-meeting');
+    res.redirect('/new-call');
   })
   .catch((error) => {
     res.render('login', {
@@ -146,19 +146,48 @@ app.get("/", function (req, res) {
 
 // cache("3 days"),
 app.get("/new-call",  function (req, res) {
-  res.render('new-call', {
-    url: req.originalUrl,
-    lib: library.url
+
+  const sessionCookie = req.cookies.session || "";
+
+  admin
+  .auth()
+  .verifySessionCookie(sessionCookie, true /** checkRevoked */)
+  .then(() => {
+    res.render('new-call', {
+      url: req.originalUrl,
+      lib: library.url
+    });
+  })
+  .catch((error) => {
+    res.render('login', {
+      url: req.originalUrl,
+      lib: library.url
+    });
   });
 });
 
 
 // cache("3 days"),
 app.get("/join-call",  function (req, res) {
-  res.render('join-call', {
-    url: req.originalUrl,
-    lib: library.url
+  
+  const sessionCookie = req.cookies.session || "";
+
+  admin
+  .auth()
+  .verifySessionCookie(sessionCookie, true /** checkRevoked */)
+  .then(() => {
+    res.render('join-call', {
+      url: req.originalUrl,
+      lib: library.url
+    });
+  })
+  .catch((error) => {
+    res.render('login', {
+      url: req.originalUrl,
+      lib: library.url
+    });
   });
+
 });
 
 app.get("/meeting-room-v2", function (req, res) {
