@@ -27,6 +27,28 @@ const entireChat = document.getElementById('chat-section');
 const chatZone = document.getElementById('message-container-box');
 const sendBtn = document.getElementById('send-msg');
 
+// Prevent User from inspecting code in any method
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+});
+document.onkeydown = function(e) {
+  if(event.keyCode == 123) {
+    return false;
+  }
+  if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+    return false;
+  }
+  if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+    return false;
+  }
+  if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+    return false;
+  }
+  if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+    return false;
+  }
+}
+
 var VideoChat = {
   connected: false,
   willInitiateCall: false,
@@ -42,16 +64,19 @@ var VideoChat = {
   // noMediaStream function.
   requestMediaStream: function (event) {
     logM("requestMediaStream");
-    rePositionLocalVideo();
+    // rePositionLocalVideo();
     navigator.mediaDevices
       .getUserMedia({
-        video: true,
+        video: {
+            width: { ideal: 4096 },
+            height: { ideal: 2160 } 
+        },
         audio: true,
       })
       .then((stream) => {
         VideoChat.onMediaStream(stream);
-        localVideoText.text("Drag Me");
-        setTimeout(() => localVideoText.fadeOut(), 5000);
+        // localVideoText.text("Drag Me");
+        // setTimeout(() => localVideoText.fadeOut(), 5000);
       })
       .catch((error) => {
         logM(error);
@@ -360,24 +385,24 @@ function chatRoomFull() {
 }
 
 // Reposition local video to top left of remote video
-function rePositionLocalVideo() {
-  // Get position of remote video
-  var bounds = remoteVideo.position();
-  let localVideo = $("#local-video");
-  if (
-    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent
-    )
-  ) {
-    bounds.top = $(window).height() * 0.7;
-    bounds.left += 10;
-  } else {
-    bounds.top += 10;
-    bounds.left += 10;
-  }
-  // Set position of local video
-  $("#moveable").css(bounds);
-}
+// function rePositionLocalVideo() {
+//   // Get position of remote video
+//   var bounds = remoteVideo.position();
+//   let localVideo = $("#local-video");
+//   if (
+//     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+//       navigator.userAgent
+//     )
+//   ) {
+//     bounds.top = $(window).height() * 0.7;
+//     bounds.left += 10;
+//   } else {
+//     bounds.top += 10;
+//     bounds.left += 10;
+//   }
+//   // Set position of local video
+//   $("#moveable").css(bounds);
+// }
 
 // Reposition captions to bottom of video
 function rePositionCaptions() {
@@ -892,7 +917,7 @@ function startUp() {
   }
 
   // Set tab title
-  document.title = "Zipcall - " + url.substring(url.lastIndexOf("/") + 1);
+  document.title = "Medica - " + url.substring(url.lastIndexOf("/") + 1);
 
   // get webcam on load
   VideoChat.requestMediaStream();

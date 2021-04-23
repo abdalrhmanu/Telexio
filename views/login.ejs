@@ -4,77 +4,38 @@
     <%- include ('partials/head') %>
 <body class="body">
 
-    
     <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js" defer></script>
     <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js" defer></script>
-    
-    <!-- Page Header -->
-    <%- include ('partials/header') %>
+    <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/TweenMax.min.js"></script> -->
 
 
-    <!-- <section class="container-fluid">
-        <div class="container">
-            <div class="row">
-                <div class="col-8">
-                    <div class="row"><h1 style="font-size: 3em;">Sign up or Login here</h1></div>
-                    <div class="row"><h4 style="    margin-top: 0;
-                        font-weight: 800;
-                        color: rgb(87, 95, 101);
-                        text-align: left;
-                        font-size: 1rem;">Start your free trial now</h4></div>
-                    <div class="row">
-                        <div class="col-6" style="    border: 1px solid rgb(87, 95, 101);
-                        border-radius: 8px;
-                        padding: 30px;">
-                            <form id="login" method="POST" autocomplete="off">
-                                <div class="form-group" style="padding: 10px;">
-                                    <label>Email</label>
-                                    <input type="text" id="email" name="login" required="" title="Please enter you username" placeholder="example@gmail.com" style="    height: 40px;
-                                    border-radius: 4px;
-                                    width: 100%;
-                                    margin-top: 20px; padding: 8px;">
-                                </div>
-                                <div class="form-group" style="padding: 10px;">
-                                    <label for="password" >Password</label>
-                                    <input type="password" id="password" name="password" value="" required="" title="Please enter your password" style="    height: 40px;
-                                    border-radius: 4px;
-                                    width: 100%;
-                                    margin-top: 20px;padding: 8px;">
-                                </div>
-                                <div id="loginErrorMsg" style="display: none;">Wrong username og password</div>
-                                <div style="padding: 10px;">
-                                    <button type="submit" style="padding: 10px 20px; border-radius: 8px; color: #000;">Login</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-4"></div>
-            </div>
-        </div>
-    </section> -->
-
-    <section class="container-fluid" style="    max-width: 640px;
-    height: 640px;
-    display: flex;
-    align-items: center;">
-        <div class="container">
-            <div class="row">
-                <div class="button-wrapper" style="    width: 100%;
-                margin: 10px 20px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: #fff;
-                background-color: rgb(51, 51, 51);
-                cursor: pointer;">
-                    <img style="margin: 10px;" src="/images/github-dark.svg" alt="">
-                    <span>Log in with GitHub</span>
-                </div>
-            </div>
-        </div>
-    </section>
+    <style>
+        .body{
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-wrapper{
+            z-index: 222;
+            opacity: .85;
+            /* backdrop-filter: blur(1px); */
+            -webkit-backdrop-filter: blur(1px);
+            position: absolute;
+            display: flex;
+            width: 80vw;
+            height: 75vh;
+            min-height: 80vh;
+            border-radius: 20px;
+            /* background-color: #1a1d1e;
+            background-color: #17191a; */
+            overflow: hidden;
+            /* box-shadow: 0 10px 30px rgb(0 0 0 / 3%); */
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        }
+    </style>
            
     <!-- <script>
         window.addEventListener("DOMContentLoaded", () => {
@@ -135,9 +96,34 @@
 
         });
       </script> -->
+    <div id="large-header" class="large-header">
+        <canvas id="demo-canvas"></canvas>
+        
 
+    </div>
+<div class="login-wrapper">
+    <section class="container-fluid" style="    max-width: 640px;
+        height: 640px;
+        display: flex;
+        align-items: center;">
+        <div class="container">
+            <div class="row">
+                <a href="/auth" class="button-wrapper" style="    width: 100%;
+                    margin: 10px 20px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: #fff;
+                    background-color: rgb(51, 51, 51);
+                    text-decoration: none;
+                    cursor: pointer;">
+                    <img style="margin: 10px;" src="/images/github-dark.svg" alt="">
+                    <span>Log in with GitHub</span>
+                </a>
+            </div>
+        </div>
+    </section>
+</div>
       <script src="javascripts/snackbar.js"></script>
-
-
 </body>
 </html>

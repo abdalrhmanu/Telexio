@@ -7,6 +7,10 @@ var twillioAccountSID =
   process.env.HEROKU_TWILLIO_SID || process.env.LOCAL_TWILLIO_SID;
 var twilio = require("twilio")(twillioAccountSID, twillioAuthToken);
 var library = require("./config/library");
+// var crypto = require("./modules/utils");
+
+var GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
+var GITHUB_SECRET = process.env.GITHUB_SECRET;
 
 // Express server setup 
 var express = require("express");
@@ -25,6 +29,8 @@ const minifyHTML = require('express-minify-html');
 var path = require("path");
 var public = path.join(__dirname, "public");
 const url = require("url");
+const axios = require('axios');
+const localStorage = require("localStorage");
 
 const csrf = require('csurf');
 const csrfMiddleware = csrf({cookie: true});
@@ -71,55 +77,74 @@ admin.initializeApp({
   databaseURL: 'https://meet-video-conferencing-default-rtdb.firebaseio.com/'
 })
 
-app.all('*', (req, res, next)=>{
-  res.cookie("XSRF-TOKEN", req.csrfToken());
-  next();
-})
+// app.all('*', (req, res, next)=>{
+//   res.cookie("XSRF-TOKEN", req.csrfToken());
+//   next();
+// })
 
-app.post("/auth/api/sessionLogin", (req, res) => {
-  const idToken = req.body.idToken.toString();
+// app.post("/auth/api/sessionLogin", (req, res) => {
+//   const idToken = req.body.idToken.toString();
 
-  const expiresIn = 60 * 60 * 24 * 5 * 1000;
+//   const expiresIn = 60 * 60 * 24 * 5 * 1000;
 
-  admin
-    .auth()
-    .createSessionCookie(idToken, { expiresIn })
-    .then(
-      (sessionCookie) => {
-        const options = { maxAge: expiresIn, httpOnly: true };
-        res.cookie("session", sessionCookie, options);
-        res.end(JSON.stringify({ status: "success" }));
-      },
-      (error) => {
-        res.status(401).send("UNAUTHORIZED REQUEST!");
-      }
+//   admin
+//     .auth()
+//     .createSessionCookie(idToken, { expiresIn })
+//     .then(
+//       (sessionCookie) => {
+//         const options = { maxAge: expiresIn, httpOnly: true };
+//         res.cookie("session", sessionCookie, options);
+//         res.end(JSON.stringify({ status: "success" }));
+//       },
+//       (error) => {
+//         res.status(401).send("UNAUTHORIZED REQUEST!");
+//       }
+//   );
+// });
+
+// app.get("/logout", (req, res) => {
+//   res.clearCookie("session");
+//   res.redirect("/login");
+// });
+
+app.get('/auth', (req, res) => {
+  res.redirect(
+    `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}`,
   );
 });
 
-app.get("/logout", (req, res) => {
-  res.clearCookie("session");
-  res.redirect("/login");
+app.get('/oauth-callback', ({ query: { code } }, res) => {
+  const body = {
+    client_id: GITHUB_CLIENT_ID,
+    client_secret: GITHUB_SECRET,
+    code,
+  };
+  const opts = { headers: { accept: 'application/json' } };
+  axios
+    .post('https://github.com/login/oauth/access_token', body, opts)
+    .then((_res) => _res.data.access_token)
+    .then((token) => {
+      // eslint-disable-next-line no-console
+      console.log('My token:', token); // add to localstorage instrad of redirecting to /token
+      let userLogs = {
+        auth:{
+          token: token
+        }
+      }
+      // localStorage.setItem('user-logs', userDetails);
+
+      res.redirect(`/?token=${token}`);
+    })
+    .catch((err) => res.status(500).json({ err: err.message }));
 });
 
 
 app.get('/login', function(req, res, next) {
 
-  const sessionCookie = req.cookies.session || "";
-
-  admin
-  .auth()
-  .verifySessionCookie(sessionCookie, true /** checkRevoked */)
-  .then(() => {
-    res.redirect('/new-call');
-  })
-  .catch((error) => {
-    res.render('login', {
-      url: req.originalUrl,
-      lib: library.url
-    });
+  res.render('login', {
+    url: req.originalUrl,
+    lib: library.url
   });
-
-  
 });
 
 app.get('/signup', function(req, res, next) {
@@ -146,48 +171,20 @@ app.get("/", function (req, res) {
 
 // cache("3 days"),
 app.get("/new-call",  function (req, res) {
-
-  const sessionCookie = req.cookies.session || "";
-
-  admin
-  .auth()
-  .verifySessionCookie(sessionCookie, true /** checkRevoked */)
-  .then(() => {
-    res.render('new-call', {
+  res.render('new-call', {
       url: req.originalUrl,
       lib: library.url
     });
-  })
-  .catch((error) => {
-    res.render('login', {
-      url: req.originalUrl,
-      lib: library.url
-    });
-  });
 });
 
 
 // cache("3 days"),
 app.get("/join-call",  function (req, res) {
-  
-  const sessionCookie = req.cookies.session || "";
 
-  admin
-  .auth()
-  .verifySessionCookie(sessionCookie, true /** checkRevoked */)
-  .then(() => {
-    res.render('join-call', {
-      url: req.originalUrl,
-      lib: library.url
-    });
-  })
-  .catch((error) => {
-    res.render('login', {
-      url: req.originalUrl,
-      lib: library.url
-    });
+  res.render('join-call', {
+    url: req.originalUrl,
+    lib: library.url
   });
-
 });
 
 app.get("/meeting-room-v2", function (req, res) {
