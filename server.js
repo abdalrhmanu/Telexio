@@ -1,37 +1,27 @@
 require("dotenv").config();
+
+var express = require("express");
+var app = express();
+var http = require("http").createServer(app);
+
 var sslRedirect = require("heroku-ssl-redirect");
-// Get twillio auth and SID from heroku if deployed, else get from local .env file
 var twillioAuthToken =
   process.env.HEROKU_AUTH_TOKEN || process.env.LOCAL_AUTH_TOKEN;
 var twillioAccountSID =
   process.env.HEROKU_TWILLIO_SID || process.env.LOCAL_TWILLIO_SID;
 var twilio = require("twilio")(twillioAccountSID, twillioAuthToken);
-var library = require("./config/library");
-// var crypto = require("./modules/utils");
-
 var GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 var GITHUB_SECRET = process.env.GITHUB_SECRET;
 
-// Express server setup 
-var express = require("express");
-var app = express();
-var http = require("http").createServer(app);
-var PORT = process.env.PORT || 3000;
-
-
-app.set('view engine', 'ejs')
-app.use(express.static('public'))
-
-// Socket.io
 var io = require("socket.io")(http);
 
+app.set('view engine', 'ejs')
+
+const logM = require('./utils/logM');
 const minifyHTML = require('express-minify-html');
-var path = require("path");
-var public = path.join(__dirname, "public");
 const url = require("url");
 const axios = require('axios');
 const localStorage = require("localStorage");
-
 const csrf = require('csurf');
 const csrfMiddleware = csrf({cookie: true});
 const cookieParser = require('cookie-parser');
@@ -45,20 +35,11 @@ const cache = apicache.options({
   exclude:[404,500] // list status codes to specifically exclude (e.g. [404, 403] cache all responses unless they had a 404 or 403 status)
 }}).middleware;
 
-// Utils
-const logM = require('./utils/logM');
 
-
-// enable ssl redirect
-app.use(sslRedirect());
 app.use(cookieParser());
 app.use(csrfMiddleware);
-
-// Serve static files in the public directory
-// app.use(express.static("public"));
-
-
-// HTML Minifier
+app.use(express.static('public'))
+app.use(sslRedirect());
 app.use(minifyHTML({
   override: true,
   exception_url: false,
@@ -71,11 +52,17 @@ app.use(minifyHTML({
   }
 }));
 
+// Routers
+const indexRouter = require('./routes/index');
+
+app.use('/', indexRouter);
+
+
 // Auth
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://meet-video-conferencing-default-rtdb.firebaseio.com/'
-})
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+//   databaseURL: 'https://meet-video-conferencing-default-rtdb.firebaseio.com/'
+// })
 
 // app.all('*', (req, res, next)=>{
 //   res.cookie("XSRF-TOKEN", req.csrfToken());
@@ -138,76 +125,6 @@ app.get('/oauth-callback', ({ query: { code } }, res) => {
     .catch((err) => res.status(500).json({ err: err.message }));
 });
 
-
-app.get('/login', function(req, res, next) {
-
-  res.render('login', {
-    url: req.originalUrl,
-    lib: library.url
-  });
-});
-
-app.get('/signup', function(req, res, next) {
-  res.redirect('/login')
-});
-
-// Remove trailing slashes in url
-app.use(function (req, res, next) {
-  if (req.path.substr(-1) === "/" && req.path.length > 1) {
-    let query = req.url.slice(req.path.length);
-    res.redirect(301, req.path.slice(0, -1) + query);
-  } else {
-    next();
-  }
-});
-
-//  cache("3 days"),
-app.get("/", function (req, res) {
-  res.render('index', {
-    url: req.originalUrl,
-    lib: library.url
-  });
-});
-
-// cache("3 days"),
-app.get("/new-call",  function (req, res) {
-  res.render('new-call', {
-      url: req.originalUrl,
-      lib: library.url
-    });
-});
-
-
-// cache("3 days"),
-app.get("/join-call",  function (req, res) {
-
-  res.render('join-call', {
-    url: req.originalUrl,
-    lib: library.url
-  });
-});
-
-app.get("/meeting-room-v2", function (req, res) {
-    res.sendFile(path.join(public, "/html/meetingRoom2.html"));
-});
-
-app.get("/test", function (req, res) {
-    res.render('playground/meeting-room-playground');
-});
-
-app.get("/meeting-room/", function (req, res) {
-  res.redirect("/");
-});
-
-app.get("/meeting-room/*", function (req, res) {
-  if (Object.keys(req.query).length > 0) {
-    logM("redirect:" + req.url + " to " + url.parse(req.url).pathname);
-    res.redirect(url.parse(req.url).pathname);
-  } else {
-    res.sendFile(path.join(public, "/html/meetingRoom.html"));
-  }
-});
-
 // When a socket connects, set up the specific listeners we will use.
 io.on("connection", function (socket) {
   // When a client tries to join a room, only allow them if they are first or
@@ -265,6 +182,8 @@ io.on("connection", function (socket) {
   });
 });
 
+
+const PORT = process.env.PORT || 3000;
 http.listen(PORT, function () {
   console.log("http://localhost:" + PORT);
 });
