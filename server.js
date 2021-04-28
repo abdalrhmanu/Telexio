@@ -94,37 +94,6 @@ app.use('/', indexRouter);
 //   res.redirect("/login");
 // });
 
-app.get('/auth', (req, res) => {
-  res.redirect(
-    `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}`,
-  );
-});
-
-app.get('/oauth-callback', ({ query: { code } }, res) => {
-  const body = {
-    client_id: GITHUB_CLIENT_ID,
-    client_secret: GITHUB_SECRET,
-    code,
-  };
-  const opts = { headers: { accept: 'application/json' } };
-  axios
-    .post('https://github.com/login/oauth/access_token', body, opts)
-    .then((_res) => _res.data.access_token)
-    .then((token) => {
-      // eslint-disable-next-line no-console
-      console.log('My token:', token); // add to localstorage instrad of redirecting to /token
-      let userLogs = {
-        auth:{
-          token: token
-        }
-      }
-      // localStorage.setItem('user-logs', userDetails);
-
-      res.redirect(`/?token=${token}`);
-    })
-    .catch((err) => res.status(500).json({ err: err.message }));
-});
-
 // When a socket connects, set up the specific listeners we will use.
 io.on("connection", function (socket) {
   // When a client tries to join a room, only allow them if they are first or
