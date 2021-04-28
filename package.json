@@ -10,11 +10,16 @@
   "license": "See License",
   "dependencies": {
     "apicache": "^1.6.2",
+    "cookie-parser": "^1.4.5",
+    "csurf": "^1.11.0",
     "dotenv": "^8.1.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "express-minify-html": "^0.12.0",
+    "firebase-admin": "^9.6.0",
     "heroku-ssl-redirect": "0.0.4",
+    "localStorage": "^1.0.4",
+    "node-localstorage": "^2.1.6",
     "socket.io": "^2.2.0",
     "twilio": "^3.34.0"
   },
