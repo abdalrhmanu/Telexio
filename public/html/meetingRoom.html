@@ -31,7 +31,7 @@
                 <video class="local-video" id="local-video" autoplay muted playsinline></video>
             </div>
 
-            <div style="height: 100%;">
+            <div class="remote-wrapper">
                 <video class="remote-video" id="remote-video" autoplay playsinline></video>
 
             </div>
@@ -63,33 +63,37 @@
 
     <section>
         <!-- Controllers section -->
-        <div class="controllers-container">
-            <div class="controllers-wrapper">
-                <div class="controllers-block">
-                    <p>Meeting Details</p>
+        <div class="controller-wrapper">
+            <div class="left-controllers-wrapper">
+                <div class="invite-button">
+                    <p>Invite</p>
+                    <img src="../images/share_white_24dp.svg" class="invite-icon"></img>
                 </div>
-                <div class="controllers-block centered-controllers d-none-xs">
-                    <div class="middle-controllers-block mute-hover" onclick="{muteMicrophone()}">
-                        <i class="fas fa-microphone" id="mic-icon"></i>
-                    </div>
-                    <span class="mute-text" id="mute-text">Mute</span>
-
-                    <div class="middle-controllers-block end-call-controller-button"
-                        onclick="{window.location.href = '/newcall'}">
-                        <i class="fas fa-phone-slash"></i>
-                    </div>
-                    <span class="end-call-text">End Call</span>
-
-                    <div class="middle-controllers-block video-controller-button" onclick="{pauseVideo()}">
-                        <i class="fas fa-video" id="video-icon"></i>
-                    </div>
-                    <span class="video-text" id="video-text">Pause video</span>
-
+            </div>
+            <div class="middle-controllers-wrapper">
+                <span onclick="{muteMicrophone()}">
+                    <i class="fas fa-microphone" id="mic-icon"></i>
+                    <p id="mute-text">Mute</p>
+                </span>
+        
+                <span onclick="{pauseVideo()}">
+                    <i class="fas fa-video" id="video-icon"></i>
+                    <p id="video-text">Pause Video</p>
+                </span>
+        
+                <span>
+                    <i class="fas fa-desktop"></i>
+                    <p>Share Screen</p>
+                </span>
+            </div>
+            <div class="right-controllers-wrapper">
+                <div class="chat-button" onclick="{toggleChat()}">
+                    <p>Chat</p>
+                    <img src="../images/chat_white_24dp.svg" alt="chat-icon">
                 </div>
-                <div class="controllers-block" style="display: flex;">
-                    <div style="margin: 20px;" onclick="{requestToggleCaptions()}">Live Captions </div>
-                    <div style="margin: 20px;" onclick="{toggleChat()}">Chat</div>
-                    <div style="margin: 20px;"><i class="fas fa-ellipsis-v"></i></div>
+                <div class="end-call-button" onclick="{window.location.href = '/new-call'}">
+                    <p>End Call</p>
+                    <img src="../images/phone_disabled_white_24dp.svg" alt="">
                 </div>
             </div>
         </div>

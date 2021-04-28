@@ -4,13 +4,19 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/c939d0e917.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>Document</title>
 </head>
 <body class="body">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap');
+
         .body{
             margin: 0;
             padding: 0;
+            font-family: 'Open Sans', sans-serif;
+            color: #16171b;
         }
         .video-lg-wrapper{
             position: relative;
@@ -43,23 +49,96 @@
         .left-controllers-wrapper, .right-controllers-wrapper{
             width: 200px;
             text-align: center;
-            margin: 20px;
+            /* margin: 20px; */
             cursor: pointer;
         }
+
+        .right-controllers-wrapper{
+            display: inline-block;
+            width: 310px;
+        }
+        .right-controllers-wrapper div{
+            display: inline-block;
+            min-width: 120px;   
+        }
+
+        .right-controllers-wrapper .end-call-button{
+            background-color: #eb2626;
+            color: #fff;
+            margin: 0 10px;
+        }
+
+        .right-controllers-wrapper .end-call-button:hover{
+            background-color: #c41f1f;
+        }
+
+        .right-controllers-wrapper .chat-button{
+            box-shadow: 0px 3px 6px #00000019;
+            border: 1px solid #F0F0F0;
+            border-radius: 8px;
+        }
+
+        .right-controllers-wrapper .chat-button:hover{
+            box-shadow: 0px 7px 24px -5px rgba(0,0,0,0.75);
+        }
+
         .middle-controllers-wrapper{
             display: inline-block;
+        }
+        .middle-controllers-wrapper span, .left-controllers-wrapper div{
+            display: inline-flex;
+            width: 210px;
+            cursor: pointer;
+            /* text-align: center; */
+            height: 50px;
+            align-items: center;
+            justify-content: center;
+            margin: 0 5px;
+
+            box-shadow: 0px 3px 6px #00000019;
+            border: 1px solid #F0F0F0;
+            border-radius: 25px;
+        }
+
+        .left-controllers-wrapper div{
+            width: 150px;
+            border-radius: 8px;
+            height: unset;
+        }
+
+        .middle-controllers-wrapper span:hover, .left-controllers-wrapper div:hover{
+            box-shadow:   0px 7px 24px -5px rgba(0,0,0,0.75);
+        }
+
+        .middle-controllers-wrapper p{
+            display: inline;
             margin: 20px;
         }
-        .middle-controllers-wrapper span{
-            display: inline-block;
-            width: 100px;           
-            cursor: pointer;
-            text-align: center;
+
+        .invite-icon{
+            display: none;
         }
-        
-        @media (max-width: 576px) {
+
+        .invite-button p, .chat-button p, .end-call-button p{
+            display: block;
+        }
+        .chat-button img, .end-call-button img{
+            display: none;
+        }
+        /* Landscape */
+        @media screen and (orientation:landscape)
+            and (min-device-width: 319px) 
+            and (max-device-width: 840px) {
             .controller-wrapper{
-                display: none;
+                /* display: none; */
+                position: fixed;
+                top: 0;
+                background-color: #2e2b2b;
+                color: #fff;
+                height: 60px;
+            }
+            .right-controllers-wrapper div{
+                min-width: unset;
             }
             .video-lg-wrapper{
                 height: 100vh;
@@ -80,7 +159,203 @@
                 min-width: 250px;
                 margin: 20px;
             }
+            .left-controllers-wrapper, .right-controllers-wrapper{
+                margin: unset;
+                width: fit-content;
+            }
+            .invite-button{
+                width: 80px;
+            }
+            .middle-controllers-wrapper{
+                position: fixed;
+                left: 0;
+                display: grid;
+                bottom: 40px;
+                color: #fff;
+                margin: 20px;
+            }
+            .middle-controllers-wrapper span{
+                width: 50px;
+                margin: 10px;
+            }
+            .middle-controllers-wrapper p{
+                display: none;
+            }
+            .right-controllers-wrapper{
+                width: unset;
+            }
+            .right-controllers-wrapper .chat-button, .right-controllers-wrapper .end-call-button{
+                border: none;
+            }
+            .invite-icon{
+                display: block;
+            }
+            .invite-button p, .chat-button p, .end-call-button p{
+                display: none;
+            }
+            .chat-button, .right-controllers-wrapper .end-call-button{
+                border: none;
+                width: fit-content;
+                float: left;
+                margin: 20px;
+                background-color: unset;
+            }
+            .left-controllers-wrapper div{
+                border: none;
+                width: fit-content;
+                float: left;
+                margin: 30px;
+            }
+            .chat-button img, .end-call-button img{
+                display: block;
+            }
+        }
+        @media (max-width: 576px) {
+            .controller-wrapper{
+                /* display: none; */
+                position: fixed;
+                top: 0;
+                background-color: #2e2b2b;
+                color: #fff;
+            }
+            .right-controllers-wrapper div{
+                min-width: unset;
+            }
+            .video-lg-wrapper{
+                height: 100vh;
+            }
+            .secondary-video-wrapper{
+                right: 0;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                display: flex;
+                overflow: auto;
+                height: fit-content;
+                margin-top: auto;
+            }
+            .secondary-video{
+                display: inline-block;
+                margin: 0;
+                min-width: 250px;
+                margin: 20px;
+            }
+            .left-controllers-wrapper, .right-controllers-wrapper{
+                margin: unset;
+                width: fit-content;
+            }
+            .invite-button{
+                width: 80px;
+            }
+            .middle-controllers-wrapper{
+                position: fixed;
+                left: 0;
+                display: grid;
+                bottom: 200px;
+                color: #fff;
+                margin: 20px;
+            }
+            .middle-controllers-wrapper span{
+                width: 50px;
+                margin: 10px;
+            }
+            .middle-controllers-wrapper p{
+                display: none;
+            }
+            .right-controllers-wrapper{
+                width: unset;
+            }
+            .right-controllers-wrapper .chat-button, .right-controllers-wrapper .end-call-button{
+                border: none;
+            }
+            .invite-icon{
+                display: block;
+            }
+            .invite-button p, .chat-button p, .end-call-button p{
+                display: none;
+            }
+            .chat-button, .right-controllers-wrapper .end-call-button{
+                border: none;
+                width: fit-content;
+                float: left;
+                margin: 20px;
+                background-color: unset;
+            }
+            .left-controllers-wrapper div{
+                border: none;
+                width: fit-content;
+                float: left;
+                margin: 30px;
+            }
+            .chat-button img, .end-call-button img{
+                display: block;
+            }
 
+        }
+        @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait){
+            .middle-controllers-wrapper{
+                position: fixed;
+                left: 0;
+                display: grid;
+                top: 50%;
+                color: #fff;
+                margin: 20px;
+            }
+            .middle-controllers-wrapper span{
+                width: 50px;
+                margin: 10px;
+            }
+            .middle-controllers-wrapper p{
+                display: none;
+            }
+            .chat-button img, .end-call-button img{
+                display: none;
+            }
+        }
+        @media all and (device-width: 1024px) and (device-height: 768px) and (orientation:landscape) {
+            .middle-controllers-wrapper{
+                position: fixed;
+                left: 0;
+                display: grid;
+                top: 50%;
+                color: #fff;
+                margin: 20px;
+
+            }
+            .middle-controllers-wrapper span{
+                width: 50px;
+                margin: 10px;
+            }
+            .middle-controllers-wrapper p{
+                display: none;
+            }
+            .chat-button img, .end-call-button img{
+                display: none;
+            }
+        }
+
+        @media only screen 
+        and (min-width: 1024px) 
+        and (max-height: 1366px) 
+        and (-webkit-min-device-pixel-ratio: 1.5) {
+            .middle-controllers-wrapper{
+                position: fixed;
+                left: 0;
+                display: grid;
+                top: 50%;
+                color: #fff;
+                margin: 20px;
+            }
+            .middle-controllers-wrapper span{
+                width: 50px;
+                margin: 10px;
+            }
+            .middle-controllers-wrapper p{
+                display: none;
+            }
+            .chat-button img, .end-call-button img{
+                display: none;
+            }
         }
     </style>
     <div class="video-lg-wrapper">
@@ -98,24 +373,35 @@
     </div>
     <div class="controller-wrapper">
         <div class="left-controllers-wrapper">
-            <div>
+            <div class="invite-button">
                 <p>Invite</p>
+                <img src="../images/share_white_24dp.svg" class="invite-icon"></img>
             </div>
         </div>
         <div class="middle-controllers-wrapper">
-            <span>
+            <span onclick="{muteMicrophone()}">
+                <i class="fas fa-microphone" id="mic-icon"></i>
                 <p>Mute</p>
             </span>
-            <span>
-                End Call
+
+            <span onclick="{pauseVideo()}">
+                <i class="fas fa-video" id="video-icon"></i>
+                <p>Video Off</p>
             </span>
+
             <span>
-                Video Off
+                <i class="fas fa-desktop"></i>
+                <p>Share Screen</p>
             </span>
         </div>
         <div class="right-controllers-wrapper">
-            <div>
+            <div class="chat-button" onclick="{toggleChat()}">
                 <p>Chat</p>
+                <img src="../images/chat_white_24dp.svg" alt="chat-icon">
+            </div>
+            <div class="end-call-button" onclick="{window.location.href = '/newcall'}">
+                <p>End Call</p>
+                <img src="../images/phone_disabled_white_24dp.svg" alt="">
             </div>
         </div>
     </div>
