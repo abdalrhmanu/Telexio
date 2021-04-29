@@ -71,7 +71,7 @@ body {
         height: 90vh;
     }
     .show-chat {
-        width: 100%;
+        width: 101vw;
     }
 
     .resize-stream-container {
@@ -123,7 +123,7 @@ body {
 
     .right-controllers-wrapper{
         display: inline-block;
-        width: 310px;
+        width: 360px;
     }
     .right-controllers-wrapper div{
         display: inline-block;
@@ -193,10 +193,24 @@ body {
     .chat-button img, .end-call-button img{
         display: none;
     }
+
+    .more-options-button{
+        min-width: 30px;
+        margin: 20px 20px 20px 10px;
+    }
     /* Landscape */
     @media screen and (orientation:landscape)
     and (min-device-width: 319px) 
     and (max-device-width: 840px) {
+    .local-video{
+        top: 80px;
+    }
+    .chat-container{
+        width: 100vw;
+        position: fixed;
+        bottom: 0;
+        height: calc(100vh - 60px);
+    }
     .remote-wrapper{
         height: 90vh;
         position: fixed;
@@ -450,7 +464,7 @@ body {
     padding: 20px;
     overflow: auto;
     font-size: 12px;
-    height: calc(90vh - 110px);
+    height: calc(90vh - 120px);
 }
 
 .message-wrapper{
@@ -525,3 +539,18 @@ body {
 }
 
 /* Caption section ends */
+
+/* Timer Start */
+.timer-wrapper{
+    color: #fff;
+    position: fixed;
+    top: 30px;
+    left: 30px;
+}
+@media (max-width: 576px) {
+    .timer-wrapper{
+        top: 100px;
+        left: 30px;
+    }
+}
+/* Timer ends */
