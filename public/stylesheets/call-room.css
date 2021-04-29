@@ -155,7 +155,7 @@ body {
     }
     .middle-controllers-wrapper span, .left-controllers-wrapper div{
         display: inline-flex;
-        width: 210px;
+        width: 190px;
         cursor: pointer;
         /* text-align: center; */
         height: 50px;
@@ -546,6 +546,7 @@ body {
     position: fixed;
     top: 30px;
     left: 30px;
+    z-index: 2;
 }
 @media (max-width: 576px) {
     .timer-wrapper{
