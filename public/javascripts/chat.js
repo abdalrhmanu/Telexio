@@ -381,7 +381,7 @@ function chatRoomFull() {
     "Chat room is full. Check to make sure you don't have multiple open tabs, or try with a new room link"
   );
   // Exit room and redirect
-  window.location.href = "/newcall";
+  window.location.href = "/new-call";
 }
 
 // Reposition local video to top left of remote video
@@ -889,6 +889,28 @@ function toggleChat() {
 // }
 //Picture in picture
 
+// Timer start
+var minutesLabel = document.getElementById("minutes");
+var secondsLabel = document.getElementById("seconds");
+var totalSeconds = 0;
+setInterval(setTime, 1000);
+
+function setTime() {
+  ++totalSeconds;
+  secondsLabel.innerHTML = pad(totalSeconds % 60);
+  minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60));
+}
+
+function pad(val) {
+  var valString = val + "";
+  if (valString.length < 2) {
+    return "0" + valString;
+  } else {
+    return valString;
+  }
+}
+// Timer Ends
+
 function startUp() {
   //  Try and detect in-app browsers and redirect
   var ua = navigator.userAgent || navigator.vendor || window.opera;
@@ -899,21 +921,21 @@ function startUp() {
       ua.indexOf("Instagram") > -1)
   ) {
     if (DetectRTC.osName === "iOS") {
-      window.location.href = "/notsupportedios";
+      // window.location.href = "/notsupportedios";
     } else {
-      window.location.href = "/notsupported";
+      // window.location.href = "/notsupported";
     }
   }
 
   // Redirect all iOS browsers that are not Safari
   if (DetectRTC.isMobileDevice) {
     if (DetectRTC.osName === "iOS" && !DetectRTC.browser.isSafari) {
-      window.location.href = "/notsupportedios";
+      // window.location.href = "/notsupportedios";
     }
   }
 
   if (!isWebRTCSupported || browserName === "MSIE") {
-    window.location.href = "/notsupported";
+    // window.location.href = "/notsupported";
   }
 
   // Set tab title

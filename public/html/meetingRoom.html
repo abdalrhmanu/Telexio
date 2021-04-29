@@ -21,7 +21,11 @@
     <title>Document</title>
 </head>
 <body onresize="windowResized()">
-    
+    <!-- Timer Section  -->
+    <div class="timer-wrapper">
+        <label id="minutes">00</label>:<label id="seconds">00</label>
+    </div>
+
     <!-- Streaming section -->
     <div class="streaming-container">
         <!-- Videos Section -->
@@ -95,6 +99,9 @@
                 <div class="end-call-button" onclick="{window.location.href = '/new-call'}">
                     <p>End Call</p>
                     <img src="../images/phone_disabled_white_24dp.svg" alt="">
+                </div>
+                <div class="end-call-button">
+                    <i class="fas fa-ellipsis-v"></i>
                 </div>
             </div>
         </div>
