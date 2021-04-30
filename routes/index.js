@@ -6,16 +6,16 @@ var public = path.join(__dirname, "../public");
 var router = express.Router();
 
 
-router.get('/login', function(req, res, next) {
-  res.render('login', {
-    url: req.originalUrl,
-    lib: library.url
-  });
-});
+// router.get('/login', function(req, res, next) {
+//   res.render('login', {
+//     url: req.originalUrl,
+//     lib: library.url
+//   });
+// });
 
-router.get('/signup', function(req, res, next) {
-  res.redirect('/login')
-});
+// router.get('/signup', function(req, res, next) {
+//   res.redirect('/login')
+// });
 
 // Remove trailing slashes in url
 router.use(function (req, res, next) {
@@ -56,9 +56,9 @@ router.get("/meeting-room-v2", function (req, res) {
     res.sendFile(path.join(public, "/html/meetingRoom2.html"));
 });
 
-router.get("/test", function (req, res) {
-    res.render('playground/meeting-room-playground');
-});
+// router.get("/test", function (req, res) {
+//     res.render('playground/meeting-room-playground');
+// });
 
 router.get("/meeting-room/", function (req, res) {
   res.redirect("/");
@@ -74,36 +74,36 @@ router.get("/meeting-room/*", function (req, res) {
 });
 
 
-router.get('/auth', (req, res) => {
-  res.redirect(
-    `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}`,
-  );
-});
+// router.get('/auth', (req, res) => {
+//   res.redirect(
+//     `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}`,
+//   );
+// });
 
-router.get('/oauth-callback', ({ query: { code } }, res) => {
-  const body = {
-    client_id: GITHUB_CLIENT_ID,
-    client_secret: GITHUB_SECRET,
-    code,
-  };
-  const opts = { headers: { accept: 'application/json' } };
-  axios
-    .post('https://github.com/login/oauth/access_token', body, opts)
-    .then((_res) => _res.data.access_token)
-    .then((token) => {
-      // eslint-disable-next-line no-console
-      console.log('My token:', token); // add to localstorage instrad of redirecting to /token
-      let userLogs = {
-        auth:{
-          token: token
-        }
-      }
-      // localStorage.setItem('user-logs', userDetails);
+// router.get('/oauth-callback', ({ query: { code } }, res) => {
+//   const body = {
+//     client_id: GITHUB_CLIENT_ID,
+//     client_secret: GITHUB_SECRET,
+//     code,
+//   };
+//   const opts = { headers: { accept: 'application/json' } };
+//   axios
+//     .post('https://github.com/login/oauth/access_token', body, opts)
+//     .then((_res) => _res.data.access_token)
+//     .then((token) => {
+//       // eslint-disable-next-line no-console
+//       console.log('My token:', token); // add to localstorage instrad of redirecting to /token
+//       let userLogs = {
+//         auth:{
+//           token: token
+//         }
+//       }
+//       // localStorage.setItem('user-logs', userDetails);
 
-      res.redirect(`/?token=${token}`);
-    })
-    .catch((err) => res.status(500).json({ err: err.message }));
-});
+//       res.redirect(`/?token=${token}`);
+//     })
+//     .catch((err) => res.status(500).json({ err: err.message }));
+// });
 
 
 module.exports = router;
