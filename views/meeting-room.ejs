@@ -1,65 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <!-- Head: DON'T DELETE -->
-<% include partials/head %>
+<%- include ('partials/head') %>
+<body>
 
-<body class="body-meeting-room">
+    <style>
 
-  <% include partials/video-controller-floating %>
+        /* *{
+            margin:0;
+            box-sizing: border-box;
+        }
+        body{
+            background: #101010;
+        } */
+        .search-wrapper{
+            display: flex;
+            align-items: center;
+            flex-direction: row-reverse;
+            justify-content: flex-start;
+        }
+        .search-box{
+            height: 60px;
+            background: #fff;
+            line-height: 40px;
+            padding: 10px;
+            border-radius: 60px;
+            width: fit-content;
+            box-shadow: 0 3px 6px #00000019;
+        }
+        .search-input{
+            background: #fff;
+            color: #000;
+            outline: none;
+            border: none;
+            line-height:40px;
+            width: 0px;
+            float: left;
+            font-size:14px;
+            transition: 0.7s ease;
+            font-family:sans-serif;
+        }
+        .search-btn{
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration:none;
+            background: #fff;
+            padding: 12px;
+            border-radius: 50%;
+            float: right;
+            color: #ff5722;
+            transition: 0.4s ease;
+        }
+        .search-box:hover > .search-input{
+            width: 250px;
+            margin: 0px 8px;
+        }
+        .search-input:focus{
+            width: 240px;
+            margin: 0px 8px;
+        }
+        .search-box:hover > .search-btn{
+            background: #fff;
+        }
+        .search-input:focus + .search-btn{
+            background: #fff;
+        }
 
+        .header-title{
+            font-family: 'Open Sans';
+            text-align: center;
+        }
 
+        .chat {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-  <div id="header">
-    <a target="_blank" href="/">
-      <img src="/images/logo.svg" alt="Neon" width="48" height="48" />
-      <p>Zipcall</p>
-    </a>
-  </div>
+        .background {
+            background-color: #ff5722;
+            box-shadow: 0 3px 6px #00000019;
+            border-radius: 50%;
+            height: 60px;
+            position: absolute;
+            width: 60px;
+        }
 
-  <p id="remote-video-text"></p>
-  <video id="remote-video" autoplay playsinline></video>
-  <div id="moveable">
-    <p id="local-video-text">No webcam input</p>
-    <video id="local-video" autoplay muted playsinline></video>
-  </div>
+        .chat-bubble {
+        cursor: pointer;
+        position: relative;
+        }
 
-  <div id="entire-chat">
-    <div id="chat-zone">
-      <div class="chat-messages" id="chat-messages-box">
-        <!-- msg1 example -->
-        <!-- <div class="message-item customer cssanimation fadeInBottom">
-          <div class="message-bloc">
-            <div class="message">
-              self msg
+        .bubble {
+        transform-origin: 50%;
+        transition: transform 500ms cubic-bezier(0.17, 0.61, 0.54, 0.9);
+        }
+
+        .line {
+        fill: none;
+        stroke: rgb(255, 255, 255);
+        stroke-width: 2.75;
+        stroke-linecap: round;
+        transition: stroke-dashoffset 500ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .line1 {
+        stroke-dasharray: 60 90;
+        stroke-dashoffset: -20;
+        }
+
+        .line2 {
+        stroke-dasharray: 67 87;
+        stroke-dashoffset: -18;
+        }
+
+        .circle {
+        fill: rgb(255, 255, 255);
+        stroke: none;
+        transform-origin: 50%;
+        transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .active .bubble {
+        transform: translateX(24px) translateY(4px) rotate(45deg);
+        }
+
+        .active .line1 {
+        stroke-dashoffset: 21;
+        }
+
+        .active .line2 {
+        stroke-dashoffset: 30;
+        }
+
+        .active .circle {
+        transform: scale(0);
+        }
+    </style>
+    
+    <!-- Header -->
+    <header class="container-fluid">
+        <div class="row">
+            <div class="col-md-2">
+                <h2 class="header-title"><%= lib.app_name %></h2>
             </div>
-          </div>
-        </div> -->
+            <div class="col-md-7 offset-md-3 search-wrapper">
+                <!-- Img -->
+                <div style="width: 60px;height: 60px;display: flex;align-items: center;justify-content: center;">
+                    <img style="box-shadow: 0 3px 6px #00000019;width: 100% ; height: 100%;border-radius: 55px;" src="/images/video-guy.jpg" alt="">
+                </div>
 
-        <!-- msg2 example -->
-        <!-- <div class="message-item moderator cssanimation fadeInBottom">
-          <div class="message-bloc">
-            <div class="message">
-              From: user msg
+                <!-- Chat button -->
+                <div class="chat" onclick="this.classList.toggle('active')">
+                    <div class="background"></div>
+                    <svg style="width: 80px;" class="chat-bubble" width="100" height="100" viewBox="0 0 100 100">
+                        <g class="bubble">
+                            <path class="line line1" d="M 30.7873,85.113394 30.7873,46.556405 C 30.7873,41.101961
+                                                                36.826342,35.342 40.898074,35.342 H 59.113981 C 63.73287,35.342
+                                                                69.29995,40.103201 69.29995,46.784744" />
+                            <path class="line line2" d="M 13.461999,65.039335 H 58.028684 C
+                                                                    63.483128,65.039335
+                                                                    69.243089,59.000293 69.243089,54.928561 V 45.605853 C
+                                                                    69.243089,40.986964 65.02087,35.419884 58.339327,35.419884" />
+                        </g>
+                        <circle class="circle circle1" r="1.9" cy="50.7" cx="42.5" />
+                        <circle class="circle circle2" cx="49.9" cy="50.7" r="1.9" />
+                        <circle class="circle circle3" r="1.9" cy="50.7" cx="57.3" />
+                    </svg>
+                </div>
+
+                <!-- Search bar -->
+                <div class="search-box">
+                    <input type="text" placeholder="Friends, groups, or messages .." class="search-input">
+                    <a href="#" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </a>
+                </div>
             </div>
-          </div>
-        </div> -->
-
-      </div>
-    </div>
-    <form class="compose" id="chat-form" autocomplete="off">
-      <input type="text" placeholder="Type a message" id="msg" required/>
-    </form>
-  </div>
-
-  <% include partials/meeting-details %>
-  
-  <!-- <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script> -->
-  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="https://cdn.rawgit.com/muaz-khan/DetectRTC/master/DetectRTC.js"></script>
-  <script src="/javascripts/snackbar.js"></script>
-  <!-- <script src="/javascripts/meeting-room.js"></script> -->
-  <!-- <script src="/javascripts/webRTC.js"></script> -->
-
+        </div>
+    </header>
 </body>
 </html>
