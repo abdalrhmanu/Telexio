@@ -167,6 +167,9 @@ body {
         border: 1px solid #F0F0F0;
         border-radius: 25px;
     }
+    .middle-controllers-wrapper span{
+        width: 210px;
+    }
 
     .left-controllers-wrapper div{
         width: 150px;

@@ -79,6 +79,8 @@ var VideoChat = {
         // setTimeout(() => localVideoText.fadeOut(), 5000);
       })
       .catch((error) => {
+          VideoChat.onMediaStream();
+
         logM(error);
         logM(
           "Failed to get local webcam video, check webcam privacy settings"
@@ -90,34 +92,39 @@ var VideoChat = {
 
   // Called when a video stream is added to VideoChat
   onMediaStream: function (stream) {
-    logM("onMediaStream");
-    VideoChat.localStream = stream;
-    // Add the stream as video's srcObject.
-    // Now that we have webcam video sorted, prompt user to share URL
+    if(stream){
+      logM("onMediaStream");
+      VideoChat.localStream = stream;
+      // Add the stream as video's srcObject.
+      // Now that we have webcam video sorted, prompt user to share URL
 
-    Snackbar.show({
-      text: "Here is the join link for your call: " + url,
-      actionText: "Copy Link",
-      width: "750px",
-      pos: "top-center",
-      actionTextColor: "#616161",
-      duration: 500000,
-      backgroundColor: "#16171a",
-      onActionClick: function (element) {
-        // Copy url to clipboard, this is achieved by creating a temporary element,
-        // adding the text we want to that element, selecting it, then deleting it
-        var copyContent = window.location.href;
-        $('<input id="some-element">')
-          .val(copyContent)
-          .appendTo("body")
-          .select();
-        document.execCommand("copy");
-        var toRemove = document.querySelector("#some-element");
-        toRemove.parentNode.removeChild(toRemove);
-        Snackbar.close();
-      },
-    });
-    VideoChat.localVideo.srcObject = stream;
+      Snackbar.show({
+        text: "Here is the join link for your call: " + url,
+        actionText: "Copy Link",
+        width: "750px",
+        pos: "top-center",
+        actionTextColor: "#616161",
+        duration: 500000,
+        backgroundColor: "#16171a",
+        onActionClick: function (element) {
+          // Copy url to clipboard, this is achieved by creating a temporary element,
+          // adding the text we want to that element, selecting it, then deleting it
+          var copyContent = window.location.href;
+          $('<input id="some-element">')
+            .val(copyContent)
+            .appendTo("body")
+            .select();
+          document.execCommand("copy");
+          var toRemove = document.querySelector("#some-element");
+          toRemove.parentNode.removeChild(toRemove);
+          Snackbar.close();
+        },
+      });
+      VideoChat.localVideo.srcObject = stream;
+    }else{
+      logM("No camera input, handle cases such as camera request was rejected.")
+    }
+    
     // Now we're ready to join the chat room.
     VideoChat.socket.emit("join", roomHash);
     // Add listeners to the websocket
