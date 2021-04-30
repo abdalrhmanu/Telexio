@@ -1,1 +1,49 @@
-<h1>TEST</h1>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Multiple Languages with Jquery</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="javascripts/lang.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("select.lang-wrapper").change(function () {
+                var lang = $(this).children("option:selected").attr('id');
+
+                // Will loop as many elements as found on the page with class .lang to translate them
+                $('.lang').each(function (index, item) {
+                    $(this).text(arrLang2[lang][$(this).attr('key')]);
+                });
+            });
+        });
+
+    </script>
+</head>
+
+<body>
+
+    
+    <form>
+        <label>Select a language:</label>
+        <select class="lang-wrapper">
+            <option id="en" value="usa">English</option>
+            <option id="km" value="india">ខ្មែរ</option>
+            <option id="ar" value="arabic">Arabic</option>
+        </select>
+    </form>
+    
+
+    <ul>
+        <li class="lang" key="home">Home</li>
+        <li class="lang" key="about">About Us</li>
+        <li class="lang" key="contact">Contact Us</li>
+    </ul>
+    <p class="lang" key="desc">This is my description</p>
+
+</body>
+
+</html>
