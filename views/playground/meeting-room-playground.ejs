@@ -10,15 +10,78 @@
     <script src="javascripts/lang.js"></script>
     <script type="text/javascript">
 
-        $(document).ready(function () {
-            $("select.lang-wrapper").change(function () {
-                var lang = $(this).children("option:selected").attr('id');
+        // $(document).ready(function () {
+        //     $("select.lang-wrapper").change(function () {
+        //         var lang = $(this).children("option:selected").attr('id');
 
+        //         // Will loop as many elements as found on the page with class .lang to translate them
+        //         $('.lang').each(function (index, item) {
+        //             $(this).text(arrLang2[lang][$(this).attr('key')]);
+        //         });
+        //     });
+        // });
+
+        $(document).ready(function () {
+            var translations = JSON.parse(localStorage.getItem('translations'));
+            var lang_temp;
+            var index;
+
+            // Check if translation exists, then auto translate the page based on last selection
+            if(translations){
+                index = localStorage.getItem('langIndex');
+                $('#lang-controller>option:eq('+index+')').prop('selected', true);
+                translate();
+            }
+
+            // New translation selected
+            $('select.lang-wrapper').change(function () {
+                var lang = $(this).children('option:selected').attr('id');
+                index = $(this).children('option:selected').attr('index');
+
+                if (!translations) {
+                    console.log("inside")
+                    $.getJSON('translations/' + lang + '.json', function (data) {
+                        console.log(data)
+                        translations = data;
+                        lang_temp = lang;
+                        localStorage.setItem('translations', JSON.stringify(translations));
+                        localStorage.setItem('lang', lang_temp);
+                        localStorage.setItem('langIndex', index);
+
+                        translate();
+                    });
+
+                    
+                }else{
+                    var lang_temp = localStorage.getItem('lang');
+
+                    // translations exists
+                    if(lang_temp != lang){
+                        localStorage.clear();
+
+                        $.getJSON('translations/' + lang + '.json', function (data) {
+                            console.log(data)
+                            translations = data;
+                            lang_temp = lang;
+                            localStorage.setItem('translations', JSON.stringify(translations));
+                            localStorage.setItem('lang', lang_temp);
+                            localStorage.setItem('langIndex', index);
+
+                            translate();
+                        });
+                    }else{
+                        console.log("here")
+                        translate();
+                    }
+                }
+            });
+
+            function translate(){
                 // Will loop as many elements as found on the page with class .lang to translate them
                 $('.lang').each(function (index, item) {
-                    $(this).text(arrLang2[lang][$(this).attr('key')]);
+                    $(this).text(translations[$(this).attr('key')]);
                 });
-            });
+            }
         });
 
     </script>
@@ -29,14 +92,13 @@
     
     <form>
         <label>Select a language:</label>
-        <select class="lang-wrapper">
-            <option id="en" value="usa">English</option>
-            <option id="km" value="india">ខ្មែរ</option>
-            <option id="ar" value="arabic">Arabic</option>
+        <select class="lang-wrapper" id="lang-controller">
+            <option index="0" id="en" value="usa">English</option>
+            <option index="1" id="km" value="india">ខ្មែរ</option>
+            <option index="2" id="ar" value="arabic">Arabic</option>
         </select>
     </form>
     
-
     <ul>
         <li class="lang" key="home">Home</li>
         <li class="lang" key="about">About Us</li>
