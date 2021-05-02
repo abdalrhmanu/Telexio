@@ -187,7 +187,7 @@
 .footer-container-fluid{
   background: #f8f9fa;
   margin-top: 58px;
-  height: 15vh;
+  /* height: 15vh; */
   overflow-x: hidden; 
   display: flex; 
   align-items: center;
