@@ -7,8 +7,10 @@ $(document).ready(function () {
     // Check if translation exists, then auto translate the page based on last selection
     if(translations){
         index = JSON.parse(localStorage.getItem('dictionary'));
-        $('#lang-controller>option:eq('+index[0].langIndex+')').prop('selected', true);
-        translate();
+        if(index){
+            $('#lang-controller>option:eq('+index[0].langIndex+')').prop('selected', true);
+            translate();
+        }
     }
 
     // New translation selected
