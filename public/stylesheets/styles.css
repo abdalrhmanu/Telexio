@@ -1,5 +1,81 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap');
 
+/* Loader */
+.loader-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 222222;
+  background: #fff;
+}
+.loader {
+  position: absolute;
+  top: calc(50% - 32px);
+  left: calc(50% - 32px);
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  perspective: 800px;
+}
+
+.load-line {
+  position: absolute;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.load-line.one {
+  left: 0%;
+  top: 0%;
+  animation: rotate-one 1s linear infinite;
+  border-bottom: 3px solid #000000;
+}
+
+.load-line.two {
+  right: 0%;
+  top: 0%;
+  animation: rotate-two 1s linear infinite;
+  border-right: 3px solid #000000;
+}
+
+.load-line.three {
+  right: 0%;
+  bottom: 0%;
+  animation: rotate-three 1s linear infinite;
+  border-top: 3px solid #000000;
+}
+
+@keyframes rotate-one {
+  0% {
+      transform: rotateX(35deg) rotateY(-45deg) rotateZ(0deg);
+  }
+  100% {
+      transform: rotateX(35deg) rotateY(-45deg) rotateZ(360deg);
+  }
+}
+
+@keyframes rotate-two {
+  0% {
+      transform: rotateX(50deg) rotateY(10deg) rotateZ(0deg);
+  }
+  100% {
+      transform: rotateX(50deg) rotateY(10deg) rotateZ(360deg);
+  }
+}
+
+@keyframes rotate-three {
+  0% {
+      transform: rotateX(35deg) rotateY(55deg) rotateZ(0deg);
+  }
+  100% {
+      transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
+  }
+}
+
 /* Scroll bar starts */
 ::-webkit-scrollbar-track{
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
@@ -305,8 +381,8 @@
   opacity: 0;
   z-index: 9999;
 
-  background-color: #376df9;
-  background: linear-gradient(100deg, #376df9 0, #ff5fa0 75%, #ffc55a 100%);
+  background-color: #2b2e2e;
+  border: 1px solid #30363d;
 }
 
 .snackbar-main-container .action {
