@@ -47,6 +47,11 @@ body {
 
 .chat-container {
     width: 0%;
+    position: fixed;
+    bottom: 0;
+    height: calc(100vh - 60px);
+    right: 0;
+
     background: #fff;
     color: #000;
     display: none;
@@ -219,16 +224,6 @@ body {
     .more-options-button{
         min-width: 30px;
         margin: 20px 20px 20px 10px;
-    }
-    /* Landscape */
-    /* @media screen and (orientation:landscape)
-    and (min-device-width: 319px) 
-    and (max-device-width: 840px) { */
-    .chat-container{
-        width: 100vw;
-        position: fixed;
-        bottom: 0;
-        height: calc(100vh - 60px);
     }
     .remote-wrapper{
         height: 93vh;
@@ -483,7 +478,7 @@ body {
     padding: 20px;
     overflow: auto;
     font-size: 12px;
-    height: calc(90vh - 120px);
+    height: calc(90vh - 90px);
 }
 
 .message-wrapper{
@@ -573,6 +568,9 @@ body {
     .timer-wrapper{
         top: 100px;
         left: 30px;
+    }
+    .message-container{
+        height: calc(90vh - 120px);
     }
 }
 /* Timer ends */

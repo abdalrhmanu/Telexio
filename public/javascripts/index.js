@@ -373,6 +373,24 @@ function windowResized() {
 // Mute microphone
 function muteMicrophone() {
   var audioTrack = null;
+
+    // No second user is on call, reject muting mic
+    if(!connected){
+      Snackbar.show({
+        text: 'You can only mute/unmute your microphone once you are on a call with someone.',
+        actionText: "Close",
+        width: "300px",
+        pos: "top-right",
+        actionTextColor: "#2b2e2e",
+        duration: 5000,
+        backgroundColor: "#2b2e2e",
+        onActionClick: function (element) {
+          Snackbar.close();
+        },
+      });
+      return false
+    }
+
   // Get audio track to mute
   peerConnection.getSenders().find(function (s) {
     if (s.track.kind === "audio") {
@@ -400,6 +418,25 @@ function muteMicrophone() {
 
 // Pause Video
 function pauseVideo() {
+
+  // No second user is on call, reject pausing video
+  if(!connected){
+
+    Snackbar.show({
+      text: 'You can only stop/start your video once you are on a call with someone',
+      actionText: "Close",
+      width: "300px",
+      pos: "top-right",
+      actionTextColor: "#2b2e2e",
+      duration: 5000,
+      backgroundColor: "#2b2e2e",
+      onActionClick: function (element) {
+        Snackbar.close();
+      },
+    });
+    return false
+  }
+
   var videoTrack = null;
   // Get video track to pause
   peerConnection.getSenders().find(function (s) {
@@ -434,8 +471,20 @@ function pauseVideo() {
 function swap() {
   // Handle swap video before video call is connected
   if (!connected) {
-    alert("You must join a call before you can share your screen.");
-    return;
+    Snackbar.show({
+      text: 'You can only start sharing screen once you are on a call with someone.',
+      actionText: "Close",
+      width: "300px",
+      pos: "top-right",
+      actionTextColor: "#2b2e2e",
+      duration: 5000,
+      backgroundColor: "#2b2e2e",
+      onActionClick: function (element) {
+        Snackbar.close();
+      },
+    });
+    
+    return false
   }
   // Store swap button icon and text
   const swapIcon = document.getElementById("swap-icon");
@@ -700,6 +749,28 @@ sendBtn.addEventListener('click', ()=>{
 // Listen for enter press on chat input
 chatInput.addEventListener("keypress", function (event) {
   if (event.key === 13 || event.key === 'Enter') {
+
+    // No second user is on call, reject sending the message
+    if(!connected){
+
+      Snackbar.show({
+        text: 'You can only send a message once you are on a call with someone.',
+        actionText: "Close",
+        width: "300px",
+        pos: "top-right",
+        actionTextColor: "#2b2e2e",
+        duration: 5000,
+        backgroundColor: "#2b2e2e",
+        onActionClick: function (element) {
+          Snackbar.close();
+        },
+      });
+      
+      chatInput.value = "";
+      return false
+    }
+
+
     // Check if there is a message in the input field
     if(chatInput.value !== ""){
       // Prevent page refresh on enter
@@ -737,7 +808,6 @@ function handleRecieveMessage(msg) {
 function toggleChat() {
   let v = document.getElementById('videos-section');
   let c = document.getElementById('chat-section');
-
 
   c.classList.toggle('show-chat');
   v.classList.toggle('resize-stream-container');
