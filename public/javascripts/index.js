@@ -38,6 +38,22 @@ const remoteVideo = document.getElementById("remote-video");
 var localVideo = document.getElementById("local-video");
 var recognition = undefined;
 
+// Dropdown menu starts
+const drop_btn = document.getElementById('more-options');
+const menu_wrapper = document.querySelector(".dropdown-wrapper");
+const menu_bar = document.querySelector(".menu-bar");
+
+drop_btn.addEventListener('click', ()=>{
+    menu_wrapper.classList.toggle("show");
+})
+
+function closemenu(){
+  drop_btn.click();
+}
+// Dropdown menu ends
+
+
+// WebRTC Starts
 // Call to getUserMedia (provided by adapter.js for cross browser compatibility) asking for access to both the video and audio streams. If the request is accepted callback to the onMediaStream function, otherwise callback to the noMediaStream function.
 function requestMediaStream (event) {
   logM("requestMediaStream");
@@ -364,12 +380,6 @@ function chatRoomFull() {
 //   captionText.css(bounds);
 // }
 
-// Called when window is resized
-function windowResized() {
-  // rePositionLocalVideo();
-//   rePositionCaptions(); for captions
-}
-
 // Mute microphone
 function muteMicrophone() {
   var audioTrack = null;
@@ -576,6 +586,9 @@ function switchStreamHelper(stream) {
 // Live caption start
 // Request captions from other user, toggles state
 function requestToggleCaptions() {
+  // Close menu
+  closemenu();
+
   // Handle requesting captions before connected
   if (!connected) {
     alert("You must be connected to a peer to use Live Caption");
@@ -587,14 +600,14 @@ function requestToggleCaptions() {
     // captionButtontext.text("Start Live Caption");
     receivingCaptions = false;
   } else {
-    // Snackbar.show({
-    //   text:
-    //     "This is an experimental feature. Live caption requires the other user to be using Chrome",
-    //   width: "400px",
-    //   pos: "bottom-center",
-    //   actionTextColor: "#616161",
-    //   duration: 10000,
-    // });
+    Snackbar.show({
+      text:
+        "This is an experimental feature. Live caption requires the other user to be using Chrome",
+      width: "400px",
+      pos: "bottom-center",
+      actionTextColor: "#616161",
+      duration: 10000,
+    });
     // captionButtontext.text("End Live Caption");
     receivingCaptions = true;
   }

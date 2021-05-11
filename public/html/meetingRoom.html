@@ -5,10 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
-    <script src="https://kit.fontawesome.com/c939d0e917.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 
     <link rel="stylesheet" href="../stylesheets/call-room.css">
     <link rel="stylesheet" href="../stylesheets/styles.css">
@@ -21,31 +19,156 @@
     <title>Document</title>
 </head>
 <body>
-        <section style="display: block;
-    width: 100%;
-    height: 60px;">
-            <!-- Controllers section -->
-            <div class="controller-wrapper">
-                <div class="right-controllers-wrapper">
-                    <!-- <div class="share-button">
-                        <p>Invite</p>
-                        <img src="../images/share_white_24dp.svg" class="invite-icon"></img>
-                    </div> -->
-                    <div class="chat-button" onclick="{toggleChat()}">
-                        <p>Chat</p>
-                        <img src="../images/chat_white_24dp.svg" alt="chat-icon">
-                    </div>
-                    <div class="end-call-button" onclick="{window.location.href = '/new-call'}">
-                        <p>End Call</p>
-                        <img src="../images/phone_disabled_white_24dp.svg" alt="">
-                    </div>
-                    <!-- <div class="more-options-button" style="min-width: 30px;">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </div> -->
+    <section style="display: block;width: 100%;height: 60px;">
+        <!-- Controllers section -->
+        <div class="controller-wrapper">
+            <div class="right-controllers-wrapper">
+                <!-- <div class="share-button">
+                    <p>Invite</p>
+                    <img src="../images/share_white_24dp.svg" class="invite-icon"></img>
+                </div> -->
+                <div class="chat-button" onclick="{toggleChat()}">
+                    <p>Chat</p>
+                    <img src="../images/chat_white_24dp.svg" alt="chat-icon">
+                </div>
+                <div class="end-call-button" onclick="{window.location.href = '/new-call'}">
+                    <p>End Call</p>
+                    <img src="../images/phone_disabled_white_24dp.svg" alt="">
+                </div>
+                <div class="more-options-button" style="min-width: 30px;">
+                    <span id="more-options" class="fas fa-caret-down" style="font-size: 26px;"></span>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
+    <section>
+        <div class="dropdown-wrapper">
+            <ul class="menu-bar">
+                <li onclick="{requestToggleCaptions()}">
+                    <a>
+                        <div class="icon">
+                            <!-- <span class="fas fa-home"></span> -->
+                            <span class="far fa-closed-captioning"></span>
+                        </div>
+                        Subtitles/Closed Captions
+                    </a>
+                </li>
+                <!-- <li class="setting-item">
+                    <a href="#">
+                        <div class="icon">
+                            <span class="fas fa-cog"></span>
+                        </div>
+                        Settings & privacy <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="help-item">
+                    <a href="#">
+                        <div class="icon">
+                            <span class="fas fa-question-circle"></span>
+                        </div>
+                        Help & support <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="icon">
+                            <span class="fas fa-user"></span>
+                        </div>
+                        About us
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="icon">
+                            <span class="fas fa-comment-alt"></span>
+                        </div>
+                        Feedback
+                    </a>
+                </li> -->
+            </ul>
+            <!-- Settings & privacy Menu-items -->
+            <!-- <ul class="setting-drop">
+                <li class="arrow back-setting-btn"><span class="fas fa-arrow-left"></span>Settings & privacy</li>
+                <li>
+                    <a href="#">
+                        <div class="icon">
+                            <span class="fas fa-user"></span>
+                        </div>
+                        Personal info
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="icon">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                        Password
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="icon">
+                            <span class="fas fa-address-book"></span>
+                        </div>
+                        Activity log
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="icon">
+                            <span class="fas fa-globe-asia"></span>
+                        </div>
+                        Languages
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="icon">
+                            <span class="fas fa-sign-out-alt"></span>
+                        </div>
+                        Log out
+                    </a>
+                </li>
+            </ul> -->
+            <!-- Help & support Menu-items -->
+            <!-- <ul class="help-drop">
+                <li class="arrow back-help-btn"><span class="fas fa-arrow-left"></span>Help & support</li>
+                <li>
+                    <a href="#">
+                        <div class="icon">
+                            <span class="fas fa-question-circle"></span>
+                        </div>
+                        Help centre
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="icon">
+                            <span class="fas fa-envelope"></span>
+                        </div>
+                        Support Inbox
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="icon">
+                            <span class="fas fa-comment-alt"></span>
+                        </div>
+                        Send feedback
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="icon">
+                            <span class="fas fa-exclamation-circle"></span>
+                        </div>
+                        Report problem
+                    </a>
+                </li>
+            </ul>
+        </div> -->
+    </section>
 
     <!-- Timer Section  -->
     <div class="timer-wrapper">
