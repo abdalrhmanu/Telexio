@@ -188,7 +188,10 @@ function onToken (callback) {
   // Set up callbacks for the connection generating iceCandidates or
   // receiving the remote media stream.
   peerConnection.onicecandidate = onIceCandidate;
-  peerConnection.onaddstream = onAddStream;
+
+  // peerConnection.onaddstream = onAddStream;  // onaddstream is deprecated
+  peerConnection.ontrack = onAddStream;
+
   // Set up listeners on the socket
   socket.on("candidate", onCandidate);
   socket.on("answer", onAnswer);
@@ -331,7 +334,7 @@ function onAnswer (answer) {
 function onAddStream (event) {
   logM("onAddStream <<< Received new stream from remote. Adding it...");
   // Update remote video source
-  remoteVideo.srcObject = event.stream;
+  remoteVideo.srcObject = event.streams[0];
   // Close the initial share url snackbar
   Snackbar.close();
   // Update connection status
@@ -582,6 +585,36 @@ function switchStreamHelper(stream) {
   }
 }
 // End swap camera / screen share
+
+// Toggle fullscreen starts
+function toggleFullscreen(elem) {
+  closemenu();
+  elem = elem || document.documentElement;
+
+  if (!document.fullscreenElement && !document.mozFullScreenElement &&
+    !document.webkitFullscreenElement && !document.msFullscreenElement) {
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+      elem.msRequestFullscreen();
+    } else if (elem.mozRequestFullScreen) {
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) {
+      elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    }
+  }
+}
+// Toggle fullscreen ends
 
 // Live caption start
 // Request captions from other user, toggles state
@@ -912,7 +945,7 @@ function startUp() {
   }
 
   // Set tab title
-  document.title = "Medica - " + url.substring(url.lastIndexOf("/") + 1);
+  document.title = "Medica | " + url.substring(url.lastIndexOf("/") + 1);
 
   // get webcam on load
   requestMediaStream();
