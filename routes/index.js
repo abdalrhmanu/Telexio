@@ -45,11 +45,12 @@ router.get("/new-call",  function (req, res) {
 
 // cache("3 days"),
 router.get("/join-call",  function (req, res) {
+  res.redirect('/new-call')
 
-  res.render('join-call', {
-    url: req.originalUrl,
-    lib: library.url
-  });
+  // res.render('join-call', {
+  //   url: req.originalUrl,
+  //   lib: library.url
+  // });
 });
 
 router.get("/meeting-room-v2", function (req, res) {

@@ -373,16 +373,6 @@ function chatRoomFull() {
   window.location.href = "/new-call";
 }
 
-// Reposition captions to bottom of video
-// function rePositionCaptions() {
-//   // Get remote video position
-//   var bounds = remoteVideo.position();
-//   bounds.top -= 10;
-//   bounds.top = bounds.top + remoteVideo.height() - 1 * captionText.height();
-//   // Reposition captions
-//   captionText.css(bounds);
-// }
-
 // Mute microphone
 function muteMicrophone() {
   var audioTrack = null;
@@ -504,15 +494,6 @@ function swap() {
   const swapText = document.getElementById("swap-text");
   // If mode is camera then switch to screen share
   if (mode === "camera") {
-    // Show accept screenshare snackbar
-    // Snackbar.show({
-    //   text:
-    //     "Please allow screen share. Click the middle of the picture above and then press share.",
-    //   width: "400px",
-    //   pos: "bottom-center",
-    //   actionTextColor: "#616161",
-    //   duration: 50000,
-    // });
     // Request screen share, note we dont want to capture audio
     // as we already have the stream from the Webcam
     navigator.mediaDevices
@@ -971,9 +952,6 @@ function startUp() {
 
   // Set caption text on start
   captionText.text("Waiting for other user to join...").fadeIn();
-
-  // Reposition captions on start
-  // rePositionCaptions();
 
   // On change media devices refresh page and switch to system default
   navigator.mediaDevices.ondevicechange = () => window.location.reload();
