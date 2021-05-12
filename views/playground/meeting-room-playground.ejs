@@ -1,1 +1,29 @@
-<h1>TEST</h1>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Multiple Languages with Jquery</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="translations/translations.js"></script>
+</head>
+
+<body>
+
+    <!-- <script src="../"></script> -->
+    
+    <%- include ('../partials/translation.ejs') %>
+
+    
+    <ul>
+        <li class="lang" key="home">Home</li>
+        <li class="lang" key="about">About Us</li>
+        <li class="lang" key="contact">Contact Us</li>
+    </ul>
+    <p class="lang" key="desc">This is my description</p>
+
+</body>
+
+</html>

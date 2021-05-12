@@ -1,0 +1,42 @@
+<%
+    let lang = [
+        {
+            lang:'English',
+            id:'en'
+        },
+        {
+            lang:'Arabic',
+            id:'ar'
+        }
+    ]
+%>
+
+<style>
+    .lang-wrapper{
+        padding: 8px 30px;
+        margin: 10px;
+        border: 0;
+        background-color: transparent;
+        outline: none;
+    }
+</style>
+
+<form>
+    <label class="lang" key="lang">Select a language:</label>
+    <select class="lang-wrapper" id="lang-controller">
+        <!-- <option index="0" id="en" value="usa">English</option>
+        <option index="1" id="km" value="india">ខ្មែរ</option>
+        <option index="2" id="ar" value="arabic">Arabic</option> -->
+        <% for(let i = 0; i<lang.length; i++){ %>
+            <option index="<%= i %>" id=<%= lang[i].id %> ><%= lang[i].lang %></option>
+            <%}%>
+    </select>
+</form>
+
+<!-- Sample -->
+<!-- <ul>
+    <li class="lang" key="home">Home</li>
+    <li class="lang" key="about">About Us</li>
+    <li class="lang" key="contact">Contact Us</li>
+</ul>
+<p class="lang" key="desc">This is my description</p> -->
