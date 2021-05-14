@@ -18,12 +18,28 @@
 </div>
 
 <script>
+
     function createRoom(){
         let roomID = document.getElementById("roomID").value;
-            if(roomID.length > 6){
-                window.location = `/meeting-room/${roomID}`;
-            }else{
-                alert("Please enter a unique id more than 6 digits number.")
-            }
+
+        if(roomID.length > 6){
+            window.location = `/meeting-room/${roomID}`;
+        }else{
+            alert("Please enter a unique id more than 6 digits number.")
+        }
+
+        // let data = {roomID}
+
+        // fetch("/new-call/validate", {
+        //     method: "POST",
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(data)
+        // }).then(res => {
+        //     console.log("Request complete! response:", res);
+        // });
     }
+
+    
 </script>

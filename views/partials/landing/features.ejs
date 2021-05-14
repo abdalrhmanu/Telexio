@@ -3,22 +3,30 @@ var data = [
     {
         head:"Make one-to-one calls",
         url:"/images/landing/user-friends-solid.svg",
-        data:"Create a peer-to-peer connection with low latency with anyone, anywhere at anytime."
+        data:"Create a peer-to-peer connection with low latency with anyone, anywhere at anytime.",
+        key_head:"homepage_feature_head_one",
+        key_desc:"homepage_feature_description_one"
     },
     {
         head:"Various features",
         url:"/images/landing/podcast-solid.svg",
-        data:"You will be able to share screen, real-time messaging, live captioning, and more!"
+        data:"You will be able to share screen, real-time messaging, live captioning, and more!",
+        key_head:"homepage_feature_head_two",
+        key_desc:"homepage_feature_description_two"
     },
     {
         head:"End-to-end Encryption",
         url:"/images/landing/shield-alt-solid.svg",
-        data:"Your calls and messages stay private and can only be seen by you and the person you're talking with."
+        data:"Your calls and messages stay private and can only be seen by you and the person you're talking with.",
+        key_head:"homepage_feature_head_three",
+        key_desc:"homepage_feature_description_three"
     },
     {
         head:"No download, only a browser.",
         url:"/images/landing/browser.svg",
-        data:"Your meeting will only be available through your browser, no apps to be downloaded."
+        data:"Your meeting will only be available through your browser, no apps to be downloaded.",
+        key_head:"homepage_feature_head_four",
+        key_desc:"homepage_feature_description_four"
     }
 ]
 
@@ -27,14 +35,14 @@ var data = [
 <div class="container">
     <div class="row">
         <div class="col-12 features-col-wrapper">
-            <h2>Getting Started</h2>
+            <h2 class="lang" key="homepage_getting_started">Getting Started</h2>
         </div>
     </div>
     <div class="row features-row">        
     <% for (var i=0; i < data.length; i++ ) { %>
         <div class="col-lg-6 col-sm-12">
             <div class="features-wrapper">
-                <h3>
+                <h3 class="lang" key="<%= data[i].key_head %>">
                     <%= data[i].head %>
                 </h3>
                 <div class="features-box">
@@ -42,7 +50,7 @@ var data = [
                     <img src="<%= data[i].url %>" alt="icon">
                     </span>
                     <span>
-                    <p>
+                    <p class="lang" key="<%= data[i].key_desc %>">
                         <%= data[i].data %>
                     </p>
                     </span>
