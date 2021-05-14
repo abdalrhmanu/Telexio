@@ -2,6 +2,7 @@ var express = require('express');
 var library = require("../config/library");
 
 var path = require("path");
+const { app } = require('firebase-admin');
 var public = path.join(__dirname, "../public");
 var router = express.Router();
 
@@ -43,6 +44,14 @@ router.get("/new-call",  function (req, res) {
     });
 });
 
+router.post("/new-call/validate", function(req, res, next){
+  // Not yet finished
+  
+  let room = req.body.roomID;
+  let length = room.length;
+  
+})
+
 // cache("3 days"),
 router.get("/join-call",  function (req, res) {
   res.redirect('/new-call')
@@ -51,10 +60,6 @@ router.get("/join-call",  function (req, res) {
   //   url: req.originalUrl,
   //   lib: library.url
   // });
-});
-
-router.get("/meeting-room-v2", function (req, res) {
-    res.sendFile(path.join(public, "/html/meetingRoom2.html"));
 });
 
 router.get("/test", function (req, res) {

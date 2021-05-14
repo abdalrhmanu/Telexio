@@ -926,7 +926,7 @@ function startUp() {
   }
 
   // Set tab title
-  document.title = "Medica | " + url.substring(url.lastIndexOf("/") + 1);
+  document.title = "DashCall | " + url.substring(url.lastIndexOf("/") + 1);
 
   // get webcam on load
   requestMediaStream();
