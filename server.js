@@ -22,8 +22,8 @@ const minifyHTML = require('express-minify-html');
 const url = require("url");
 const axios = require('axios');
 const localStorage = require("localStorage");
-const csrf = require('csurf');
-const csrfMiddleware = csrf({cookie: true});
+// const csrf = require('csurf');
+// const csrfMiddleware = csrf({cookie: true});
 const cookieParser = require('cookie-parser');
 
 const admin = require("firebase-admin");
@@ -37,8 +37,9 @@ const cache = apicache.options({
 
 
 app.use(cookieParser());
-app.use(csrfMiddleware);
+// app.use(csrfMiddleware);
 app.use(express.static('public'))
+app.use(express.json());
 app.use(sslRedirect());
 app.use(minifyHTML({
   override: true,

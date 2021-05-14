@@ -2,8 +2,8 @@ var library = {
     url: {
         // Global
         subdir: "",
-        app_name: "MEDICA", // TELER, DashCall
-        app_copyright: "Copyright © Connect 2021 by ABDELRAHMAN USAMA",
+        app_name: "DashCall", // TELER, DashCall
+        app_copyright: "Copyright © DashCall 2021 by ABDELRAHMAN USAMA",
         button_try_for_free: "Try For Free",
 
         // Landing page
