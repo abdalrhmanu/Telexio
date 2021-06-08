@@ -6,6 +6,10 @@ const { app } = require('firebase-admin');
 var public = path.join(__dirname, "../public");
 var router = express.Router();
 
+// To get user ip
+router.get('/api/user/ip', (req, res)=>{
+  res.json(req.ip)
+});
 
 // router.get('/login', function(req, res, next) {
 //   res.render('login', {
