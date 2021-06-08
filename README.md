@@ -1,5 +1,5 @@
 <h1 align="center" style="margin-bottom: 0;">
-DashCall
+Telexio
 </h1>
 <p align="center">
   <strong>Simple, secure, and fast one-to-one browser video calls</strong>

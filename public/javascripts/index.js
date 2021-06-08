@@ -361,7 +361,7 @@ return name;
 
 // Basic logging class wrapper
 function logM(message, error) {
-  console.log(message);
+  // console.log(message);
 }
 
 // Called when socket receives message that room is full
@@ -926,7 +926,7 @@ function startUp() {
   }
 
   // Set tab title
-  document.title = "DashCall | " + url.substring(url.lastIndexOf("/") + 1);
+  document.title = "Telexio | " + url.substring(url.lastIndexOf("/") + 1);
 
   // get webcam on load
   requestMediaStream();
