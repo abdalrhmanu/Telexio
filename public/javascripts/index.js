@@ -361,7 +361,7 @@ return name;
 
 // Basic logging class wrapper
 function logM(message, error) {
-  // console.log(message);
+  console.log(message);
 }
 
 // Called when socket receives message that room is full
