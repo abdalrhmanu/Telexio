@@ -67,7 +67,7 @@ router.get("/join-call",  function (req, res) {
 });
 
 router.get("/test", function (req, res) {
-    res.render('playground/meeting-room-playground');
+  res.render('playground/meeting-room-playground');
 });
 
 router.get("/meeting-room/", function (req, res) {
@@ -83,6 +83,12 @@ router.get("/meeting-room/*", function (req, res) {
   }
 });
 
+router.get("/profile", function(req, res){
+  res.render('profile', {
+    url: req.originalUrl,
+    lib: library.url
+  });
+})
 
 // router.get('/auth', (req, res) => {
 //   res.redirect(
