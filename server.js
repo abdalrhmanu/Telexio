@@ -4,7 +4,7 @@ var express = require("express");
 var app = express();
 var http = require("http").createServer(app);
 
-var sslRedirect = require("heroku-ssl-redirect");
+var sslRedirect = require("heroku-ssl-redirect").default; // .default to avoid err "sslRedirect is not a function"
 var twillioAuthToken =
   process.env.HEROKU_AUTH_TOKEN || process.env.LOCAL_AUTH_TOKEN;
 var twillioAccountSID =
